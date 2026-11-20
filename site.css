@@ -1,135 +1,67 @@
-/* The Google Site's layout (header with the links on the right, pages 1154 wide), drawn in the cutting mat's world:
-   warm sketchbook paper, inks from the coloured-pencil palette, handwriting for everything a hand would write. */
-:root{
-  --paper:#FBF8EA; --ink:#141C4A; --blue:#1F3FB8; --red:#E8343A; --pink:#F2499B; --marigold:#F6A51F; --lime:#9BE25C; --peri:#9DB5EA; --teal:#176B80;
-  --script:"Caveat",cursive; --hand:"Reenie Beanie",cursive; --sans:"Bricolage Grotesque",system-ui,sans-serif;
-}
-body.gs{margin:0;padding:0;color:var(--ink);font:400 17px/1.5 var(--sans);
-  background:var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .3  0 0 0 0 .25  0 0 0 0 .15  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* The Google Site's layout: a light header with the links on the right, pages 1154 wide, Roboto throughout.
+   The Welcome page is black around the cutting mat, the other pages light grey. */
+body.gs{margin:0;padding:0;background:#f2f2f2;color:#1c1c1c;font:400 16px/1.5 Roboto,system-ui,sans-serif}
+body.gs[data-page=welcome]{background:#000}
 .gs .wrap{width:min(1154px,100% - 2 * clamp(16px,4vw,40px));margin-inline:auto}
 
-/* watercolour blooms (bloom.js) sit behind whatever they colour */
-[data-bloom]{position:relative;isolation:isolate}
-.bloom{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
-
-/* the top bar: handwritten links; colour blooms under the cursor; frosted glass once the page scrolls under it */
 .site-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:20px;
-  padding:10px clamp(16px,3vw,40px);background:var(--paper);border-bottom:1.5px solid rgba(20,28,74,.12);
-  transition:background-color .35s,backdrop-filter .35s,box-shadow .35s}
-.site-head.scrolled{background:rgba(251,248,234,.58);-webkit-backdrop-filter:blur(18px) saturate(1.7);backdrop-filter:blur(18px) saturate(1.7);
-  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 10px 30px rgba(20,28,74,.12)}
-.site-home{font-size:24px;line-height:1;text-decoration:none;transition:rotate .25s}
-.site-home:hover{rotate:-12deg}
-.site-nav{display:flex;gap:clamp(16px,2.6vw,34px)}
-.site-nav a{position:relative;color:var(--blue);text-decoration:none;white-space:nowrap;font:700 clamp(21px,1.9vw,26px)/1 var(--script);transition:color .2s,rotate .2s}
-.site-nav a:hover{color:var(--red);rotate:-3deg}
-.site-nav a[aria-current]{color:var(--ink)}
-.site-nav a[aria-current]::after{content:"";position:absolute;left:-4%;right:-4%;bottom:-7px;height:8px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 C25 2 45 9 70 4 S95 5 98 3' fill='none' stroke='%23F2499B' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+  padding:14px clamp(16px,3vw,40px);background:#f2f2f2;box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.site-home{font-size:22px;line-height:1;text-decoration:none}
+.site-nav{display:flex;gap:clamp(14px,2.2vw,28px)}
+.site-nav a{color:#1c1c1c;text-decoration:none;white-space:nowrap}
+.site-nav a[aria-current]{font-weight:700}
+.site-nav a:hover{text-decoration:underline;text-underline-offset:4px}
 
-/* ---- Welcome ---- */
-.welcome-main{padding:clamp(28px,5vw,80px) 0 40px}
-.welcome-main .hero{min-height:0;max-height:none;border-radius:4px;box-shadow:0 18px 50px rgba(20,28,74,.22)}
-
-/* About: the portrait in a sketched frame that blooms with colour, the words in handwriting */
-.about-gs{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:clamp(28px,5vw,72px);align-items:center;margin-top:clamp(60px,9vw,130px)}
-.frame{margin:0;padding:14px 14px 56px;background:#fff;rotate:-3deg;box-shadow:0 2px 0 rgba(0,0,0,.04),0 16px 34px rgba(20,28,74,.18);transition:rotate .4s}
-.frame:hover{rotate:-1deg}
-.frame img{display:block;width:100%;height:auto;mix-blend-mode:multiply;filter:grayscale(1) contrast(1.05)}
-.frame .bloom{z-index:1;mix-blend-mode:multiply}           /* the colour lands on the white paper around the portrait */
-.frame-line{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);overflow:visible;pointer-events:none;
-  fill:none;stroke:var(--ink);stroke-linecap:round;filter:url(#rough)}
-.frame-line path{vector-effect:non-scaling-stroke;stroke-width:1.6}
-.about-words{font:500 clamp(22px,2vw,27px)/1.35 var(--script);color:var(--ink);max-width:36em}
-.about-words p{margin:0 0 .8em}
-.about-words .lead{font-size:1.45em;font-weight:700;line-height:1.15;color:var(--blue)}
-/* the highlight: a marker swash painted in under "Communication Designer", in marigold to pink */
-.swash{position:relative;background:none;color:inherit;white-space:nowrap}
-.swash svg{position:absolute;left:-4%;bottom:-.12em;width:108%;height:.85em;z-index:-1;overflow:visible;mix-blend-mode:multiply}
-.swash path{fill:none;stroke:url(#swash-ink);stroke-width:16;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420;opacity:.85;
-  animation:paint 1.1s cubic-bezier(.6,.05,.3,1) .5s forwards}
-.swash path+path{stroke-width:8;opacity:.5;animation-delay:.85s}
-.swash:hover path{animation:paint-again .9s cubic-bezier(.6,.05,.3,1) both}
-.swash:hover path+path{animation-delay:.2s}
-@keyframes paint{to{stroke-dashoffset:0}}
-@keyframes paint-again{0%{stroke-dashoffset:-420}100%{stroke-dashoffset:0}}
-.rainbow{background:linear-gradient(90deg,var(--pink),var(--marigold),var(--lime),var(--peri),var(--blue),var(--pink)) 0 0/300% 100%;
-  -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;animation:flow 6s linear infinite}
-@keyframes flow{to{background-position:300% 0}}
-.magic{color:var(--blue);font-weight:700;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='6'%3E%3Cpath d='M0 3Q2.5 .5 5 3T10 3T15 3T20 3' fill='none' stroke='%23F2499B' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 100%/20px 6px;padding-bottom:.12em;animation:crawl 1.4s linear infinite}
-@keyframes crawl{to{background-position:20px 100%}}
-.about-words .ps{font:400 1.15em/1.2 var(--hand);color:var(--red)}
-.peace{display:inline-block;transition:rotate .3s,scale .3s}.peace:hover{rotate:-18deg;scale:1.25}
-
-/* View Projects: a spiky cut-paper badge, like "draws." on the mat */
-.cta{margin:clamp(50px,7vw,90px) 0 0;text-align:center}
-.spiky-btn{display:inline-block;rotate:-4deg;filter:drop-shadow(2px 4px 1px rgba(20,28,74,.3));text-decoration:none;transition:rotate .25s,scale .25s}
-.spiky-paper{display:grid;place-items:center;width:clamp(230px,24vw,300px);aspect-ratio:2.1;background:var(--marigold);
-  font:700 clamp(28px,2.6vw,36px)/1 var(--script);color:#161514}
-.spiky-btn:hover{rotate:3deg;scale:1.06}
-.spiky-btn:hover .spiky-paper{background:var(--pink)}
-
-/* Core Skills & Toolkit */
-.gs-embed{display:block;width:100%;border:0;margin-top:clamp(50px,7vw,90px);border-radius:4px;background:var(--blue)}
+/* Welcome: the cutting mat, About, the View Projects button, Core Skills & Toolkit */
+.welcome-main{padding:clamp(40px,6vw,100px) 0 40px}
+.welcome-main .hero{min-height:0;max-height:none}
+.gs-embed{display:block;width:100%;border:0;margin-top:clamp(24px,3vw,49px);background:#000}
+.gs-embed.about{aspect-ratio:1154/392}
 .gs-embed.skills{aspect-ratio:1154/418}
+.cta{margin:clamp(24px,3vw,40px) 0 0;text-align:center}
+.gs-btn{box-sizing:border-box;display:inline-block;padding:10px 26px;border:1px solid currentColor;border-radius:4px;color:inherit;text-decoration:none;font-weight:500;transition:background .2s,color .2s}
+.gs-btn:hover{background:#1c1c1c;color:#f2f2f2}
+[data-page=welcome] .cta .gs-btn{color:#f2f2f2}
+[data-page=welcome] .cta .gs-btn:hover{background:#f2f2f2;color:#000}
 
-/* ---- Portfolio: prints pinned two to a row, the name handwritten under each ---- */
-.portfolio-main{padding:36px 0 90px}
-.grid-gs{display:grid;grid-template-columns:1fr 1fr;gap:clamp(50px,7vw,100px) clamp(30px,4vw,60px)}
-.tile{display:grid;gap:16px;color:inherit;text-decoration:none;text-align:center}
-.tile img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;padding:10px;background:#fff;box-sizing:border-box;
-  box-shadow:0 14px 30px rgba(20,28,74,.18);rotate:var(--tilt,-1.2deg);transition:rotate .3s,translate .3s,box-shadow .3s}
-.tile:nth-child(even) img{--tilt:1.4deg}
-.tile:hover img{rotate:0deg;translate:0 -6px;box-shadow:0 22px 40px rgba(20,28,74,.24)}
-.tile span{font:700 clamp(24px,2.2vw,30px)/1.1 var(--script);color:var(--blue);transition:color .2s}
-.tile:hover span{color:var(--red)}
+/* Portfolio: two tiles a row, the name centred under each */
+.portfolio-main{padding:24px 0 80px}
+.grid-gs{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,100px) 30px}
+.tile{display:grid;gap:14px;color:inherit;text-decoration:none;text-align:center}
+.tile img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;transition:opacity .2s}
+.tile:hover img{opacity:.85}
+.tile:hover span{text-decoration:underline;text-underline-offset:4px}
 
-/* ---- a project page ---- */
-.project-main{--gap:30px;padding:40px 0 70px}
-.proj-title{position:relative;width:fit-content;margin:0 auto 8px;font:700 clamp(32px,4vw,52px)/1.05 var(--script);color:var(--blue);text-align:center}
-.proj-title::after{content:"";display:block;height:12px;margin-top:4px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M2 6 C25 2 45 9 70 4 S95 5 98 3' fill='none' stroke='%23F6A51F' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
-.proj-title a{color:inherit;text-decoration:none}
-.proj-title a:hover{color:var(--red)}
-.proj-sub{margin:0;text-align:center;font:400 28px/1 var(--hand);color:var(--red)}
-.proj-link{margin:18px 0 0;text-align:center}
+/* a project page */
+.project-main{--gap:30px;padding:30px 0 60px}
+.proj-title{margin:0 0 6px;font-size:clamp(20px,2.4vw,28px);font-weight:400;text-align:center}
+.proj-title a{color:inherit;text-underline-offset:5px}
+.proj-sub{margin:0;text-align:center}
+.proj-link{margin:16px 0 0;text-align:center}
 .project-main .row{display:flex;justify-content:center;gap:var(--gap);margin-top:var(--gap)}
 .project-main .row:first-of-type,.proj-sub+.row,.proj-link+.row{margin-top:clamp(30px,5vw,70px)}
 .project-main .item{width:var(--w);flex:none}
 .project-main .item img{display:block;width:100%;height:auto}
-.project-main .embed{border:0;background:rgba(20,28,74,.08)}
+.project-main .embed{border:0;background:#ddd}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);align-items:start;margin-top:clamp(30px,5vw,70px)}
 .col{display:grid;gap:var(--gap)}
 .col img{display:block;width:100%;height:auto}
 .proj-nav{display:flex;justify-content:space-between;margin:clamp(40px,6vw,80px) 0 0}
+.proj-nav .gs-btn{min-width:min(142px,45%);text-align:center}
 
-/* hand-drawn buttons: Back, Next, View Process Deck */
-.gs-btn{box-sizing:border-box;display:inline-block;min-width:min(142px,45%);padding:6px 24px 8px;text-align:center;text-decoration:none;
-  font:700 26px/1.1 var(--script);color:var(--ink);background:var(--paper);border:2px solid var(--ink);
-  border-radius:255px 15px 225px 15px/15px 225px 15px 255px;box-shadow:3px 4px 0 var(--marigold);transition:rotate .2s,box-shadow .2s,background .2s}
-.gs-btn:hover{rotate:-2deg;background:#fff;box-shadow:5px 6px 0 var(--pink)}
-
-/* footer: the social links as ink dots, then the name and email */
-.site-foot{display:grid;justify-items:center;gap:4px;padding:60px 20px 44px;color:var(--ink);text-align:center;border-top:1.5px solid rgba(20,28,74,.12)}
+/* footer: the social links, then the name and email */
+.site-foot{display:grid;justify-items:center;gap:6px;padding:50px 20px 40px;background:#f2f2f2;color:#1c1c1c;text-align:center}
 .site-foot p{margin:0}
-.site-foot p:not(.social){font:600 24px/1.3 var(--script)}
-.site-foot .social{display:flex;gap:26px;margin-bottom:22px}
-.site-foot .social a{display:grid;place-items:center;width:54px;height:54px;border-radius:52% 48% 55% 45%/48% 54% 46% 52%;transition:rotate .2s,translate .2s}
-.site-foot .social a:nth-child(1){background:var(--blue)}.site-foot .social a:nth-child(2){background:var(--pink)}.site-foot .social a:nth-child(3){background:var(--marigold)}
-.site-foot .social a:hover{rotate:-10deg;translate:0 -4px}
-.site-foot svg{width:26px;height:26px;fill:var(--paper)}
+.site-foot .social{display:flex;gap:28px;margin-bottom:24px}
+.site-foot .social a{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#1c1c1c;transition:transform .2s}
+.site-foot .social a:hover{transform:translateY(-3px)}
+.site-foot svg{width:26px;height:26px;fill:#f2f2f2}
 .site-foot a{color:inherit;text-decoration:none}
-.site-foot a[href^=mailto]:hover{color:var(--red)}
-
-.skip:not(:focus){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-.skip:focus{position:fixed;top:8px;left:8px;z-index:60;padding:10px 14px;background:var(--ink);color:var(--paper)}
 
 @media (max-width:860px){
-  .site-head{padding:8px 14px}
-  .site-nav{gap:14px}
-  .site-nav a{font-size:20px}
-  .about-gs{grid-template-columns:1fr;justify-items:center}
-  .frame{width:min(300px,78%)}
+  .site-head{padding:12px 16px}
+  .site-nav{gap:14px;font-size:15px}
+  .gs-embed.about{aspect-ratio:2/1} /* its own phone frame is 960 x 480 */
   .gs-embed.skills{aspect-ratio:auto;height:760px}
   .grid-gs{grid-template-columns:1fr}
   .project-main{--gap:16px}
@@ -137,6 +69,14 @@ body.gs{margin:0;padding:0;color:var(--ink);font:400 17px/1.5 var(--sans);
   .project-main .item,.project-main .embed{width:100%}
   .cols{grid-template-columns:1fr}
 }
+
+.skip:not(:focus){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.skip:focus{position:fixed;top:8px;left:8px;z-index:60;padding:10px 14px;background:#1c1c1c;color:#f2f2f2}
+
+/* the top bar turns to frosted glass once the page scrolls under it */
+.site-head{transition:background-color .35s,backdrop-filter .35s,box-shadow .35s}
+.site-head.scrolled{background:rgba(242,242,242,.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 8px 30px rgba(0,0,0,.12)}
 
 /* page changes: the content slides sideways with a motion blur while the top bar stays put.
    Forward (towards Portfolio and the projects) moves the page to the left; back moves it to the right. */
@@ -151,7 +91,4 @@ html[data-slide=back]::view-transition-new(root){animation:.55s cubic-bezier(.65
 @keyframes slide-in-right{0%{transform:translateX(60%);filter:blur(6px);opacity:0}55%{filter:blur(14px)}100%{transform:none;filter:blur(0);opacity:1}}
 @keyframes slide-out-right{0%{transform:none;filter:blur(0)}45%{filter:blur(14px)}100%{transform:translateX(60%);filter:blur(6px);opacity:0}}
 @keyframes slide-in-left{0%{transform:translateX(-60%);filter:blur(6px);opacity:0}55%{filter:blur(14px)}100%{transform:none;filter:blur(0);opacity:1}}
-@media (prefers-reduced-motion:reduce){
-  @view-transition{navigation:none}
-  .swash path{animation:none;stroke-dashoffset:0}.rainbow,.magic{animation:none}
-}
+@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}
