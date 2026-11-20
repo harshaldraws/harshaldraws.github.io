@@ -7,7 +7,7 @@
 <meta name="description" content="Portfolio of Harshal Tholambia: visual development, background design, character design and illustration for animation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Reenie+Beanie&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Reenie+Beanie&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="site.css">
 <script>
@@ -74,8 +74,18 @@ addEventListener('pagereveal', async (e) => {
     <button class="lights" type="button" role="switch" aria-checked="false"><span class="track" aria-hidden="true"><span class="knob"></span></span><span class="txt">Dark mode off</span></button>
   </header>
 
-  <iframe class="gs-embed about" src="embeds/about.html" title="About Harshal Tholambia" loading="lazy"></iframe>
-  <p class="cta"><a class="gs-btn" href="portfolio.html">View Projects</a></p>
+  <section class="about-gs" aria-label="About">
+    <figure class="frame" data-bloom>
+      <img src="images/me.webp" alt="Harshal Tholambia, smiling, in profile" width="900" height="900">
+      <svg class="frame-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M2 3 L97 1.5 L98.5 97 L1.5 98.5 Z M4 1 L99 4 M1 96 L3 2" /></svg>
+    </figure>
+    <div class="about-words">
+      <p class="lead">Harshal Tholambia is a <mark class="swash">Communication Designer<svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="swash-ink" x1="0" x2="1"><stop offset="0" stop-color="#F6A51F"/><stop offset=".55" stop-color="#F2499B"/><stop offset="1" stop-color="#9DB5EA"/></linearGradient></defs><path d="M4 24 C60 10 120 30 180 18 S270 12 296 22"/><path d="M10 30 C80 22 150 36 220 26 S280 24 292 28"/></svg></mark> from the National Institute of Fashion Technology, raised in Kota, Rajasthan.</p>
+      <p>He’s drawn to imperfections and always on the lookout for narratives worth telling. The work is rooted in visual storytelling and a love for playing with <span class="rainbow">colour</span> with the aim of <span class="magic">keeping a little magic alive</span> in it all. Most of it comes from personal experiences and moments he wants to hold onto. Art is just his way of capturing them.</p>
+      <p class="ps">ps. i make better art when the music’s loud. <span class="peace" aria-hidden="true">✌️</span></p>
+    </div>
+  </section>
+  <p class="cta"><a class="spiky-btn" href="portfolio.html"><span class="spiky-paper">view projects →</span></a></p>
   <iframe class="gs-embed skills" src="embeds/skills.html" title="Core skills and core toolkit" loading="lazy"></iframe>
 </div></main>
 
@@ -110,5 +120,6 @@ addEventListener('pagereveal', async (e) => {
 <script src="cutletters.js"></script>
 <script src="main.js"></script>
 <script src="recommend.js"></script>
+<script src="bloom.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
   const href = (slug) => (slug === 'welcome' ? './' : `project.html?p=${slug}`);
 
   document.querySelector('.skip').insertAdjacentHTML('afterend', `
-    <header class="site-head">
+    <header class="site-head" data-bloom=".6">
       <a class="site-home" href="./" aria-label="Home">🏠</a>
       <nav class="site-nav" aria-label="Main">
         <a href="./"${page === 'welcome' ? ' aria-current="page"' : ''}>Welcome!</a>
@@ -64,6 +64,16 @@
       ${body}
       ${p.back || p.next ? `<p class="proj-nav">${p.back ? `<a class="gs-btn" href="${href(p.back)}" data-dir="back">Back</a>` : '<span></span>'}${p.next ? `<a class="gs-btn" href="${href(p.next)}" data-dir="forward">Next</a>` : ''}</p>` : ''}`;
   }
+
+  // ---- a spiky cut-paper edge, like the "draws." badge on the mat ----
+  document.querySelectorAll('.spiky-paper').forEach((el) => {
+    const n = 30, pts = [];
+    for (let k = 0; k < n; k++) {
+      const a = (k / n) * Math.PI * 2, r = k % 2 ? 0.82 + Math.random() * 0.05 : 1;
+      pts.push(`${(50 + 50 * r * Math.cos(a)).toFixed(2)}% ${(50 + 50 * r * Math.sin(a)).toFixed(2)}%`);
+    }
+    el.style.clipPath = `polygon(${pts.join(',')})`;
+  });
 
   // ---- the top bar turns to frosted glass once the page scrolls under it ----
   const head = document.querySelector('.site-head');
