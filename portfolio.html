@@ -6,7 +6,7 @@
 <title>Portfolio - Harshal Tholambia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 <script>
 /* the page slides in from the side the visitor is heading to (set by the link clicked, site.js); reloads just appear */
@@ -23,8 +23,20 @@ addEventListener('pagereveal', async (e) => {
 </head>
 <body class="gs" data-page="portfolio">
 <a class="skip" href="#main">Skip to content</a>
-<main id="main" class="portfolio-main wrap"><div id="grid" class="grid-gs"></div></main>
+<!-- paper grain for the cut-out letters, the same as on the cutting mat -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="paper" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .05" numOctaves="3" seed="4" result="n"/>
+    <feColorMatrix in="n" values="0 0 0 0 .55  0 0 0 0 .48  0 0 0 0 .36  0 0 0 -2.4 1.05" result="fibres"/>
+    <feComposite in="fibres" in2="SourceGraphic" operator="in" result="grain"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="grain"/></feMerge>
+  </filter>
+</svg>
+<main id="main" class="portfolio-main">
+  <div class="wrap"><div id="grid" class="grid-gs"></div></div>
+</main>
 <script src="content.js"></script>
+<script src="cutalphabet.js"></script>
 <script src="site.js"></script>
 </body>
 </html>

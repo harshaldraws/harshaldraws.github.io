@@ -250,3 +250,50 @@ if (matchMedia('(hover:hover)').matches) {
   });
   hero.addEventListener('pointerleave', () => hero.classList.remove('lit'));
 }
+
+// ---- the objects on the mat: the one under the cursor lifts a little, a click shows its note (DESK in content.js).
+// Each photo is mostly see-through, so "under the cursor" is decided by the photo's own pixels, not its rectangle. ----
+{
+  const hero = $('.hero');
+  const objects = $$('.hero .photo, .hero .desk-book').map((el) => {
+    const key = ['pens', 'sharpener', 'ruler', 'desk-book'].find((k) => el.classList.contains(k));
+    const img = el.tagName === 'IMG' ? el : $('.day', el);
+    const o = { el, key, img, alpha: null };
+    const read = () => { // a small copy of the photo's transparency, to test the cursor against
+      const c = document.createElement('canvas'), w = (c.width = 200), h = (c.height = Math.round((200 * img.naturalHeight) / img.naturalWidth));
+      const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0, w, h);
+      o.alpha = { w, h, data: g.getImageData(0, 0, w, h).data };
+    };
+    if (img.complete && img.naturalWidth) read(); else img.addEventListener('load', read, { once: true });
+    return o;
+  });
+  const note = document.createElement('p');
+  note.className = 'obj-note'; note.setAttribute('role', 'status'); note.hidden = true;
+  hero.append(note);
+  const under = (e) => objects.find((o) => {
+    if (!o.alpha) return false;
+    const r = o.el.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return false;
+    const x = Math.floor(((e.clientX - r.left) / r.width) * o.alpha.w), y = Math.floor(((e.clientY - r.top) / r.height) * o.alpha.h);
+    return o.alpha.data[(y * o.alpha.w + x) * 4 + 3] > 60;
+  });
+  const busy = (e) => e.target.closest('button, a, .cut, .pad, .draws') || hero.querySelector('.lifted');
+  let on = null;
+  hero.addEventListener('pointermove', (e) => {
+    const o = busy(e) ? null : under(e);
+    if (o === on) return;
+    on?.el.classList.remove('obj-on'); on = o; on?.el.classList.add('obj-on');
+    hero.classList.toggle('over-obj', !!on);
+  });
+  hero.addEventListener('pointerleave', () => { on?.el.classList.remove('obj-on'); on = null; hero.classList.remove('over-obj'); });
+  hero.addEventListener('click', (e) => {
+    if (busy(e)) return;
+    const o = under(e);
+    if (!o || !DESK[o.key]) { note.hidden = true; return; }
+    const h = hero.getBoundingClientRect(), d = DESK[o.key];
+    note.innerHTML = `<b>${esc(d.label)}</b>${esc(d.text)}`;
+    note.hidden = false;
+    const x = Math.min(Math.max(e.clientX - h.left, 130), h.width - 130), y = Math.max(e.clientY - h.top, 90);
+    note.style.left = `${x}px`; note.style.top = `${y}px`;
+  });
+}

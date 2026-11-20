@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Illustration Wall - Harshal Tholambia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<script>
+/* the page slides in from the side the visitor is heading to (set by the link clicked, site.js); reloads just appear */
+addEventListener('pagereveal', async (e) => {
+  const dir = sessionStorage.getItem('slide');
+  sessionStorage.removeItem('slide');
+  if (!e.viewTransition) return;
+  if (!dir) return e.viewTransition.skipTransition();
+  document.documentElement.dataset.slide = dir;
+  await e.viewTransition.finished;
+  delete document.documentElement.dataset.slide;
+});
+</script>
+</head>
+<body class="gs" data-page="wall">
+<a class="skip" href="#main">Skip to content</a>
+<main id="main" class="wall-main">
+  <div id="wall" class="wall-gs" tabindex="0" aria-label="Illustrations in different styles, scattered like prints. Drag to look around; arrow keys move it too."></div>
+</main>
+<script src="content.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
