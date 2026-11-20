@@ -72,3 +72,23 @@ body.gs[data-page=welcome]{background:#000}
 
 .skip:not(:focus){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .skip:focus{position:fixed;top:8px;left:8px;z-index:60;padding:10px 14px;background:#1c1c1c;color:#f2f2f2}
+
+/* the top bar turns to frosted glass once the page scrolls under it */
+.site-head{transition:background-color .35s,backdrop-filter .35s,box-shadow .35s}
+.site-head.scrolled{background:rgba(242,242,242,.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 8px 30px rgba(0,0,0,.12)}
+
+/* page changes: the content slides sideways with a motion blur while the top bar stays put.
+   Forward (towards Portfolio and the projects) moves the page to the left; back moves it to the right. */
+@view-transition{navigation:auto}
+.site-head{view-transition-name:site-head}
+::view-transition-group(root){animation-duration:.55s;animation-timing-function:cubic-bezier(.65,0,.25,1)}
+html[data-slide=forward]::view-transition-old(root){animation:.55s cubic-bezier(.65,0,.25,1) both slide-out-left}
+html[data-slide=forward]::view-transition-new(root){animation:.55s cubic-bezier(.65,0,.25,1) both slide-in-right}
+html[data-slide=back]::view-transition-old(root){animation:.55s cubic-bezier(.65,0,.25,1) both slide-out-right}
+html[data-slide=back]::view-transition-new(root){animation:.55s cubic-bezier(.65,0,.25,1) both slide-in-left}
+@keyframes slide-out-left{0%{transform:none;filter:blur(0)}45%{filter:blur(14px)}100%{transform:translateX(-60%);filter:blur(6px);opacity:0}}
+@keyframes slide-in-right{0%{transform:translateX(60%);filter:blur(6px);opacity:0}55%{filter:blur(14px)}100%{transform:none;filter:blur(0);opacity:1}}
+@keyframes slide-out-right{0%{transform:none;filter:blur(0)}45%{filter:blur(14px)}100%{transform:translateX(60%);filter:blur(6px);opacity:0}}
+@keyframes slide-in-left{0%{transform:translateX(-60%);filter:blur(6px);opacity:0}55%{filter:blur(14px)}100%{transform:none;filter:blur(0);opacity:1}}
+@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}

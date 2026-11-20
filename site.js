@@ -11,13 +11,13 @@
   const page = document.body.dataset.page; // welcome | portfolio | project
   const html = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const two = (n) => String(n).padStart(2, '0');
-  const href = (slug) => (slug === 'welcome' ? 'index.html' : `project.html?p=${slug}`);
+  const href = (slug) => (slug === 'welcome' ? './' : `project.html?p=${slug}`);
 
   document.querySelector('.skip').insertAdjacentHTML('afterend', `
     <header class="site-head">
-      <a class="site-home" href="index.html" aria-label="Home">🏠</a>
+      <a class="site-home" href="./" aria-label="Home">🏠</a>
       <nav class="site-nav" aria-label="Main">
-        <a href="index.html"${page === 'welcome' ? ' aria-current="page"' : ''}>Welcome!</a>
+        <a href="./"${page === 'welcome' ? ' aria-current="page"' : ''}>Welcome!</a>
         <a href="portfolio.html"${page !== 'welcome' ? ' aria-current="page"' : ''}>Portfolio</a>
         <a href="${RESUME}" target="_blank" rel="noopener">View Resume</a>
       </nav>
@@ -62,6 +62,24 @@
       ${p.sub ? `<p class="proj-sub">${html(p.sub)}</p>` : ''}
       ${p.link ? `<p class="proj-link"><a class="gs-btn" href="${p.link.href}" target="_blank" rel="noopener">${html(p.link.text)}</a></p>` : ''}
       ${body}
-      ${p.back || p.next ? `<p class="proj-nav">${p.back ? `<a class="gs-btn" href="${href(p.back)}">Back</a>` : '<span></span>'}${p.next ? `<a class="gs-btn" href="${href(p.next)}">Next</a>` : ''}</p>` : ''}`;
+      ${p.back || p.next ? `<p class="proj-nav">${p.back ? `<a class="gs-btn" href="${href(p.back)}" data-dir="back">Back</a>` : '<span></span>'}${p.next ? `<a class="gs-btn" href="${href(p.next)}" data-dir="forward">Next</a>` : ''}</p>` : ''}`;
   }
+
+  // ---- the top bar turns to frosted glass once the page scrolls under it ----
+  const head = document.querySelector('.site-head');
+  const glass = () => head.classList.toggle('scrolled', scrollY > 4);
+  addEventListener('scroll', glass, { passive: true }); glass();
+
+  // ---- pages slide sideways into each other: Welcome is on the left, Portfolio in the middle, projects on the right.
+  // The link clicked decides the direction; the next page reads it in its <head> as it appears (@view-transition in site.css) ----
+  const PLACE = { welcome: 0, portfolio: 1, project: 2 };
+  const placeOf = (url) => (/portfolio\.html$/.test(url.pathname) ? 1 : /project\.html$/.test(url.pathname) ? 2 : 0);
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (!a || a.target === '_blank') return;
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin) return;
+    const dir = a.dataset.dir || (placeOf(url) >= PLACE[page] ? 'forward' : 'back');
+    sessionStorage.setItem('slide', dir);
+  });
 }
