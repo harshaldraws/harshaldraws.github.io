@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harshal Tholambia — Visual Development and Background Design</title>
+<meta name="description" content="Portfolio of Harshal Tholambia: visual development, background design, character design and illustration for animation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Reenie+Beanie&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="gs" data-page="welcome">
+<!-- print filters: "rough" chews the edge of type like dry ink; each "ink-*" turns the black marks sheet into one ink -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- the handwriting's jitter: the ink is nudged by a noise pattern that changes three times in a loop, like a line boil -->
+  <filter id="boil" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="1"><animate attributeName="seed" values="1;5;9" dur=".42s" calcMode="discrete" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+  <filter id="boil-still" x="-5%" y="-10%" width="110%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
+  <filter id="rough" x="-5%" y="-10%" width="110%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="4" result="w"/>
+    <feDisplacementMap in="SourceGraphic" in2="w" scale="4" result="d"/>
+    <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="9"/>
+    <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 1.9" result="g"/>
+    <feComposite in="d" in2="g" operator="in"/>
+  </filter>
+  <!-- paper grain for the cut-out letters: fine dark fibres laid over the paper colour -->
+  <filter id="paper" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".09 .05" numOctaves="3" seed="4" result="n"/>
+    <feColorMatrix in="n" values="0 0 0 0 .55  0 0 0 0 .48  0 0 0 0 .36  0 0 0 -2.4 1.05" result="fibres"/>
+    <feComposite in="fibres" in2="SourceGraphic" operator="in" result="grain"/>
+    <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="grain"/></feMerge>
+  </filter>
+  <filter id="ink-red" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 .91  0 0 0 0 .2  0 0 0 0 .23  -.26 -.86 -.09 0 1.1"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+  <filter id="ink-blue" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 .12  0 0 0 0 .25  0 0 0 0 .72  -.26 -.86 -.09 0 1.1"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+  <filter id="ink-pink" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 .95  0 0 0 0 .29  0 0 0 0 .61  -.26 -.86 -.09 0 1.1"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+  <filter id="ink-marigold" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 .96  0 0 0 0 .65  0 0 0 0 .12  -.26 -.86 -.09 0 1.1"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+  <filter id="ink-lime" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 .61  0 0 0 0 .89  0 0 0 0 .36  -.26 -.86 -.09 0 1.1"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+  <filter id="ink-cream" color-interpolation-filters="sRGB"><feColorMatrix values="0 0 0 0 .98  0 0 0 0 .97  0 0 0 0 .92  -.26 -.86 -.09 0 1.1"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+
+<main id="main" class="welcome-main"><div class="wrap">
+  <header id="top" class="hero">
+    <div class="mat" aria-hidden="true"><img src="images/mat.webp" alt=""><i class="grid"></i><i class="grid glow"></i></div>
+    <div class="hero-type">
+      <h1 aria-label="Harshal Tholambia draws."><span class="ln" aria-hidden="true">Harshal</span> <span class="ln" aria-hidden="true">Tholambia</span> <span class="draws" aria-hidden="true"><span class="draws-paper"><span class="hand" data-hand="hero" data-ink="black"></span></span></span></h1>
+    </div>
+    <div id="cutouts"></div>
+    <button class="pad" type="button" aria-label="Recommend me something interesting (a song, film, book, show, comic, video, newsletter or rabbit hole): write a note"><span class="pad-in">
+      <img class="ink" src="images/rec-heading.webp" alt=""><img class="ink line" src="images/rec-line.webp" alt="">
+      <span class="kinds" aria-hidden="true"><img class="ink" src="images/rec-song.webp" alt="" style="--i:0"><img class="ink" src="images/rec-film.webp" alt="" style="--i:1"><span class="ink hand" style="--i:2">book</span><span class="ink hand" style="--i:3">tv show</span><span class="ink hand" style="--i:4">graphic novel</span><span class="ink hand" style="--i:5">manga</span><span class="ink hand" style="--i:6">anime</span><span class="ink hand" style="--i:7">yt video</span><span class="ink hand" style="--i:8">substack</span><img class="ink rabbit" src="images/rec-rabbit.webp" alt="" style="--i:9"></span>
+    </span><span class="pad-thanks hand" aria-live="polite"></span></button>
+    <button class="peek hand" type="button">see what others recommended</button>
+    <img class="desk-book" src="images/sketchbook.webp" alt="" aria-hidden="true">
+    <div class="photo ruler" aria-hidden="true"><img class="day" src="images/ruler-day.webp" alt=""><span class="night"><img src="images/ruler-night1.webp" alt=""><img src="images/ruler-night3.webp" alt=""><img src="images/ruler-night4.webp" alt=""><img src="images/ruler-night2.webp" alt=""></span></div>
+    <div class="photo sharpener" aria-hidden="true"><img class="day" src="images/sharpener-day.webp" alt=""><img class="night" src="images/sharpener-night.webp" alt=""></div>
+    <div class="photo pens" aria-hidden="true"><img class="day" src="images/pens-day.webp" alt=""><img class="night" src="images/pens-night.webp" alt=""></div>
+    <i class="light" aria-hidden="true"></i>
+    <button class="lights" type="button" role="switch" aria-checked="false"><span class="track" aria-hidden="true"><span class="knob"></span></span><span class="txt">Dark mode off</span></button>
+  </header>
+
+  <iframe class="gs-embed about" src="embeds/about.html" title="About Harshal Tholambia" loading="lazy"></iframe>
+  <p class="cta"><a class="gs-btn" href="portfolio.html">View Projects</a></p>
+  <iframe class="gs-embed skills" src="embeds/skills.html" title="Core skills and core toolkit" loading="lazy"></iframe>
+</div></main>
+
+
+
+<div class="rec" hidden>
+  <div class="rec-card">
+    <form class="rec-face front" aria-label="Recommend me something interesting: a song, film, book, show, comic, video, newsletter or rabbit hole">
+      <img class="ink head" src="images/rec-heading.webp" alt="Recommend me something interesting...">
+      <textarea class="ink" name="text" rows="1" maxlength="500" aria-label="Your recommendation" required></textarea>
+      <img class="ink line" src="images/rec-line.webp" alt="">
+      <span class="kinds" aria-hidden="true"><img class="ink" src="images/rec-song.webp" alt="" style="--i:0"><img class="ink" src="images/rec-film.webp" alt="" style="--i:1"><span class="ink hand" style="--i:2">book</span><span class="ink hand" style="--i:3">tv show</span><span class="ink hand" style="--i:4">graphic novel</span><span class="ink hand" style="--i:5">manga</span><span class="ink hand" style="--i:6">anime</span><span class="ink hand" style="--i:7">yt video</span><span class="ink hand" style="--i:8">substack</span><img class="ink rabbit" src="images/rec-rabbit.webp" alt="" style="--i:9"></span>
+      <span class="go-row"><button class="back-btn put-back ink hand" type="button">put back</button><button class="go ink hand" type="submit">next</button></span>
+    </form>
+    <form class="rec-face back" aria-label="Recommended by" inert>
+      <p class="ink hand by">recommended by:</p>
+      <input class="ink" name="by" maxlength="60" autocomplete="name" aria-label="Your name">
+      <img class="ink line" src="images/rec-line.webp" alt="">
+      <p class="rec-msg hand" role="status"></p>
+      <span class="go-row"><button class="back-btn ink hand" type="button">back</button><button class="go ink hand" type="submit">send</button></span>
+    </form>
+  </div>
+</div>
+<div class="pile" hidden role="dialog" aria-modal="true" aria-label="Recommendations from visitors">
+  <button class="pile-close hand" type="button">close</button>
+  <div class="pile-board"></div>
+  <p class="pile-msg hand" role="status"></p>
+</div>
+<script src="content.js"></script>
+<script src="site.js"></script>
+<script src="sounds.js"></script>
+<script src="cutletters.js"></script>
+<script src="main.js"></script>
+<script src="recommend.js"></script>
+</body>
+</html>
