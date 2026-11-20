@@ -207,6 +207,7 @@ h1 .draws:not(.landed){animation:stick .6s cubic-bezier(.2,.8,.25,1) 1s backward
    following the lamp as it sways */
 .photo.sharpener .day{filter:drop-shadow(3px 6px 3px rgba(0,0,0,.4))}
 .photo.sharpener .night{filter:drop-shadow(var(--sx,3px) var(--sy,6px) 2px rgba(0,0,0,.6))}
+.photo.pens .night{filter:drop-shadow(var(--sx,3px) var(--sy,6px) 2px rgba(0,0,0,.6))} /* like the sharpener: away from the lamp, swaying with it */
 /* the lamp's light is one layer laid over the whole desk (mat, grid, name, cut-outs, 3D objects), so whatever lies
    half in the pool is lit exactly as the mat beneath it is: warm yellow inside, a soft edge, dark outside */
 .light{position:absolute;inset:0;z-index:9;pointer-events:none;display:none}
