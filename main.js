@@ -251,7 +251,7 @@ if (matchMedia('(hover:hover)').matches) {
   hero.addEventListener('pointerleave', () => hero.classList.remove('lit'));
 }
 
-// ---- the objects on the mat: the one under the cursor lifts a little, a click shows its note (DESK in content.js).
+// ---- the objects on the mat: the one under the cursor lifts a little.
 // Each photo is mostly see-through, so "under the cursor" is decided by the photo's own pixels, not its rectangle. ----
 {
   const hero = $('.hero');
@@ -267,9 +267,6 @@ if (matchMedia('(hover:hover)').matches) {
     if (img.complete && img.naturalWidth) read(); else img.addEventListener('load', read, { once: true });
     return o;
   });
-  const note = document.createElement('p');
-  note.className = 'obj-note'; note.setAttribute('role', 'status'); note.hidden = true;
-  hero.append(note);
   const under = (e) => objects.find((o) => {
     if (!o.alpha) return false;
     const r = o.el.getBoundingClientRect();
@@ -283,17 +280,6 @@ if (matchMedia('(hover:hover)').matches) {
     const o = busy(e) ? null : under(e);
     if (o === on) return;
     on?.el.classList.remove('obj-on'); on = o; on?.el.classList.add('obj-on');
-    hero.classList.toggle('over-obj', !!on);
   });
-  hero.addEventListener('pointerleave', () => { on?.el.classList.remove('obj-on'); on = null; hero.classList.remove('over-obj'); });
-  hero.addEventListener('click', (e) => {
-    if (busy(e)) return;
-    const o = under(e);
-    if (!o || !DESK[o.key]) { note.hidden = true; return; }
-    const h = hero.getBoundingClientRect(), d = DESK[o.key];
-    note.innerHTML = `<b>${esc(d.label)}</b>${esc(d.text)}`;
-    note.hidden = false;
-    const x = Math.min(Math.max(e.clientX - h.left, 130), h.width - 130), y = Math.max(e.clientY - h.top, 90);
-    note.style.left = `${x}px`; note.style.top = `${y}px`;
-  });
+  hero.addEventListener('pointerleave', () => { on?.el.classList.remove('obj-on'); on = null; });
 }

@@ -10,18 +10,7 @@ const HAND = { hero: 'draws.' };
 // shape: 'stamp' gives it a perforated postage-stamp edge; leave it out for a plain cut-out.
 // "crop" is only the stand-in taken from the old landing drawing until your cut-out exists.
 // SAMPLE TEXT: rewrite "label" and "text" with what each thing means to you.
-const CUTOUTS = [
-  { img: 'cutouts/01', shape: 'stamp', label: 'Sample stamp', x: 74, y: 50, mx: 68, my: 66.5, w: 11, r: -6, crop: [65, 70, 33, 25], text: 'Sample note. What this thing is and why it matters to you.' },
-];
-
-// The objects on the cutting mat: hover lifts one, a click shows its note.
-// SAMPLE TEXT: rewrite each "text" with what the object is and why it's on your desk.
-const DESK = {
-  pens: { label: 'Pens', text: 'Sample note. Which pens these are and what you draw with them.' },
-  sharpener: { label: 'Sharpener', text: 'Sample note. The story of this sharpener.' },
-  ruler: { label: 'Ruler', text: 'Sample note. Why this ruler stays on the desk.' },
-  'desk-book': { label: 'Sketchbook', text: 'Sample note. What goes in this sketchbook.' },
-};
+const CUTOUTS = [];
 
 // The illustration wall at the top of the Portfolio page: different styles side by side.
 // Each entry is a project and the pictures of it to show (numbers are 01, 02 ... in images/<slug>/; a name is <name>.webp).
