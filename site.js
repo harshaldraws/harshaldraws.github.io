@@ -158,21 +158,49 @@
     const item = (it, share) => {
       const o = typeof it === 'number' ? { img: it } : it;
       const w = o.w ? `${(o.w / 1154) * 100}%` : share;
-      if (o.embed) return `<iframe class="item embed" src="${html(o.embed)}" style="--w:${w};aspect-ratio:${o.w || 1154} / ${o.h || ((o.w || 1154) * 9) / 16}" title="${html(p.title)}" loading="lazy" allowfullscreen></iframe>`;
+      if (o.embed) return `<iframe class="item embed" src="${html(o.embed)}" style="--w:${w};aspect-ratio:${o.w || 1154} / ${o.h || ((o.w || 1154) * 9) / 16}" title="${html(p.tile)}" loading="lazy" allowfullscreen></iframe>`;
       return `<div class="item" style="--w:${w}">${pic(p.slug, o.img, `${p.tile}, picture ${o.img}`)}</div>`;
     };
-    const body = p.drift
-      ? `<div class="drift" tabindex="0" aria-label="${html(p.title)}: drag sideways, or use the arrow keys"><div class="drift-track">${p.drift.map((n) => pic(p.slug, n, `${p.tile}, page ${n}`)).join('')}</div></div>`
-      : p.columns
-      ? `<div class="cols">${p.columns.map((col) => `<div class="col">${col.map((n) => pic(p.slug, n, `${p.tile}, picture ${n}`)).join('')}</div>`).join('')}</div>`
-      : p.rows.map((row) => `<div class="row">${row.map((it) => item(it, row.length === 1 ? '100%' : `calc((100% - ${row.length - 1} * var(--gap)) / ${row.length})`)).join('')}</div>`).join('');
-    const title = p.titleLink ? `<a href="${p.titleLink}" target="_blank" rel="noopener">${html(p.title)}</a>` : html(p.title);
-    host.innerHTML = `
-      <h1 class="proj-title">${title}</h1>
-      ${p.sub ? `<p class="proj-sub">${html(p.sub)}</p>` : ''}
-      ${p.link ? `<p class="proj-link"><a class="gs-btn" href="${p.link.href}" target="_blank" rel="noopener">${html(p.link.text)}</a></p>` : ''}
-      ${body}
-      <p class="proj-nav"><a class="gs-btn" href="portfolio.html" data-dir="back">Back</a>${p.next ? `<a class="gs-btn" href="${href(p.next)}" data-dir="forward">Next project</a>` : ''}</p>`;
+    const ext = (u) => `<a href="${html(u.href)}" target="_blank" rel="noopener">${html(u.text)}</a>`;
+    // one part of the page (see PROJECTS in content.js)
+    const part = (t) => {
+      if (t.hero) return t.hero.endsWith('.mp4')
+        ? `<video class="hero-pic${t.w ? ' framed' : ''}" style="--h:${t.h}px;--w:${t.w}px" src="images/${p.slug}/${t.hero}" autoplay muted loop playsinline aria-hidden="true"></video>`
+        : `<img class="hero-pic" style="--h:${t.h}px" src="images/${p.slug}/${t.hero}" alt="">`;
+      if (t.title) return `<h1 class="proj-title">${html(t.title)}</h1>${t.sub ? `<p class="proj-sub">${html(t.sub)}</p>` : ''}`;
+      if (t.details) return `<div class="details">
+          <div class="facts"><dl>${Object.entries(t.details).map(([k, v]) => `<dt>${html(k)}:</dt><dd>${html(v)}</dd>`).join('')}
+          ${p.software && p.software.length ? `<dt>Software:</dt><dd class="software">${p.software.map((n) => `<img src="images/software/${n}.svg" alt="${html(n)}" title="${html(n)}">`).join('')}</dd>` : ''}</dl>
+          ${t.link ? `<p class="d-link">${ext(t.link)}</p>` : ''}</div>
+          <div class="about">${t.heading ? `<h2>${html(t.heading)}</h2>` : ''}${t.about.map((x) => `<p>${html(x)}</p>`).join('')}</div>
+        </div>`;
+      if (t.row) return `<div class="row">${t.row.map((it) => item(it, t.row.length === 1 ? '100%' : `calc((100% - ${t.row.length - 1} * var(--gap)) / ${t.row.length})`)).join('')}</div>`;
+      if (t.link) return `<p class="p-link">${ext(t.link)}</p>`;
+      if (t.heading) return `<h2 class="p-heading">${html(t.heading)}</h2>`;
+      if (t.caption) return `<p class="p-caption">${html(t.caption)}</p>`;
+      if (t.note) return `<div class="p-note">${t.note.map((x) => `<p>${html(x)}</p>`).join('')}</div>`;
+      if (t.feature) return `<div class="p-feature${t.center ? ' center' : ''}"><h2>${html(t.feature)}</h2>${t.text ? `<p>${html(t.text)}</p>` : ''}</div>`;
+      if (t.columns) return `<div class="cols">${t.columns.map((col) => `<div class="col">${col.map((n) => pic(p.slug, n, `${p.tile}, picture ${n}`)).join('')}</div>`).join('')}</div>`;
+      if (t.case) return '<div id="tc-host"></div>';
+      if (t.drift) return `<div class="drift" tabindex="0" aria-label="${html(p.tile)}: drag sideways, or use the arrow keys"><div class="drift-track">${t.drift.map((n) => pic(p.slug, n, `${p.tile}, page ${n}`)).join('')}</div></div>`;
+      throw new Error(`Unknown part in ${p.slug}: ${JSON.stringify(t)}`);
+    };
+    // parts in a row with the same background share one full-width band; the opening picture runs edge to edge
+    const bands = [];
+    for (const t of p.parts) {
+      const bg = t.hero ? 'hero' : t.case ? 'case' : t.bg || 'white', last = bands[bands.length - 1];
+      if (last && last.bg === bg && bg !== 'hero') last.parts.push(t); else bands.push({ bg, parts: [t] });
+    }
+    host.innerHTML = bands.map((b) => b.bg === 'hero' || b.bg === 'case'
+      ? `<section class="band ${b.bg}">${part(b.parts[0])}</section>`
+      : `<section class="band ${b.bg}"><div class="wrap">${b.parts.map(part).join('')}</div></section>`).join('')
+      + `<div class="wrap"><p class="proj-nav"><a class="gs-btn" href="portfolio.html" data-dir="back">Back</a>${p.next ? `<a class="gs-btn" href="${href(p.next)}" data-dir="forward">Next project</a>` : ''}</p></div>`;
+    // a designed part (cases/<name>.css + .js) fills its own #tc-host, full width
+    const designed = p.parts.find((t) => t.case);
+    if (designed) {
+      document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="cases/${designed.case}.css">`);
+      const s = document.createElement('script'); s.src = `cases/${designed.case}.js`; document.body.append(s);
+    }
     // the drifting row: drag it sideways and it glides on, slowing to a stop; it can't run past either end
     const drift = host.querySelector('.drift');
     if (drift) {

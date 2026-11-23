@@ -162,7 +162,7 @@ h1 .draws:not(.landed){animation:stick .6s cubic-bezier(.2,.8,.25,1) 1s backward
 .pile-msg{position:absolute;inset:auto 0 50%;margin:0;text-align:center;color:var(--paper);font-size:clamp(1.6rem,3vw,2.4rem)}
 .pile-msg button{background:none;border:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}
 /* your sketchbook, open, cut off by the top and right edges of the mat (its photo is cropped there too) */
-.desk-book{position:absolute;z-index:2;top:0;right:0;width:20%;pointer-events:none;filter:drop-shadow(-6px 8px 7px rgba(0,0,0,.35))}
+.desk-book{position:absolute;z-index:2;top:0;right:0;width:30%;pointer-events:none;filter:drop-shadow(-6px 8px 7px rgba(0,0,0,.35))}
 .lamp .desk-book{filter:drop-shadow(var(--sx,3px) var(--sy,6px) 2px rgba(0,0,0,.6))} /* under the lamp: away from it, swaying with it, like the sharpener */
 
 /* the desk lamp (on at first in dark mode; the lights switch turns it on and off): the room goes dark and one lamp lights the mat.
@@ -375,7 +375,7 @@ figcaption{margin-top:10px;font-size:.85rem;font-weight:500}
   .pens{width:84%;right:-34%;bottom:-3%}
   .sharpener{left:24%;top:4%;width:32%}
   .ruler{left:-4%;width:96%}
-  .desk-book{width:44%}
+  .desk-book{width:62%}
   .hero{--lx:54.5%;--ly:45%;--lw:94%;--lh:77%} /* as on desktop: centred on the name, lighting the name and the titles */
   .mat::after{background:linear-gradient(180deg,rgba(4,26,15,.3),rgba(4,26,15,.62) 45%,rgba(4,26,15,.62) 65%,rgba(4,26,15,.32))}
   .cut{left:var(--mx);top:var(--my);width:var(--mw)}

@@ -1,0 +1,367 @@
+/* Terracotta, The Bake Studio: the designed case-study page (loaded by site.js only for project.html?p=bakery-branding).
+   One token block; every section reads colour, type, radius and spacing from it. */
+@font-face{font-family:"Lora";src:url(../fonts/Lora-Variable.ttf) format("truetype");font-weight:400 700;font-style:normal;font-display:swap}
+
+:root{
+  --color-canvas:#FFFFFF;--color-surface:#FFFDFB;--color-surface-alt:#EBDACE;--color-text:#17100B;--color-text-muted:#544B45;
+  --color-divider:#CFC1B8;--color-control-border:#74665B;--color-accent:#BA5427;--color-accent-hover:#A23F0A;--color-on-accent:#FFFFFF;
+  --color-accent-text:#712700;--color-focus-ring:#9D3900;
+  /* the rest of the locked brand palette, and the two tints the Deep Teal section needs */
+  --color-teal:#496468;--color-pink:#EAC8C6;--color-taupe:#D3B59F;--color-teal-card:#557276;
+  --color-on-dark-muted:rgb(255 255 255 / .84);--color-on-dark-rule:rgb(255 255 255 / .3);--color-scrim:rgb(23 16 11 / .55);
+  --font-primary:Montserrat,sans-serif;--font-secondary:Inter,sans-serif;--font-specimen:"Lora",serif;
+  --text-display:clamp(3.25rem, 1.5rem + 7vw, 8rem);--text-h1:clamp(2.5rem, 1.4rem + 4.5vw, 5.25rem);--text-h2:clamp(2rem, 1.2rem + 3vw, 3.75rem);
+  --text-h3:clamp(1.375rem, 1rem + 1.2vw, 1.875rem);--text-body:1.0625rem;--text-small:0.9375rem;--text-label:0.75rem;
+  --radius-1:10px;--radius-2:20px;--radius-3:32px;--radius-pill:999px;
+  --space-section:clamp(5rem, 11vw, 10rem);--space-gutter:clamp(1.25rem, 4vw, 3.5rem);--space-stack:clamp(1rem, 2vw, 1.75rem);
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+
+.tc{background:var(--color-canvas);color:var(--color-text);font:400 var(--text-body)/1.6 var(--font-secondary);overflow-x:clip}
+.tc *{box-sizing:border-box}
+.tc img,.tc video{display:block;max-width:100%}
+/* resets carry no more weight than one class, so each component's own spacing (below) wins */
+.tc :where(p,h1,h2,h3,h4,ul,ol,dl,dd,figure){margin:0}
+.tc :where(ul,ol){padding:0;list-style:none}
+.tc-wrap{width:min(1200px,100% - 2 * var(--space-gutter));margin-inline:auto}
+.tc-sec{padding-block:var(--space-section)}
+
+/* type: the site's own, Montserrat for headings and Inter for everything else (as on the other project pages), one label style */
+.tc-display,.tc-h1,.tc-h2,.tc-h3,.tc-statement{font-family:var(--font-primary);font-weight:600;letter-spacing:-.02em}
+.tc-display{font-size:var(--text-display);line-height:.98}
+.tc-h1{font-size:var(--text-h1);line-height:1.02}
+.tc-h2{font-size:var(--text-h2);line-height:1.08}
+.tc-h3{font-size:var(--text-h3);line-height:1.2}
+.tc-body{color:var(--color-text-muted)}
+.tc-em{font-style:normal;color:var(--color-accent)}
+.tc-label{font:500 var(--text-label)/1.5 var(--font-secondary);letter-spacing:.22em;text-transform:uppercase;color:var(--color-text-muted)}
+.tc-rule{display:block;height:1px;background:var(--color-divider)}
+.tc-ruled{display:flex;align-items:center;justify-content:center;gap:16px}
+.tc-ruled::before,.tc-ruled::after{content:"";width:48px;height:1px;background:currentColor;opacity:.5}
+.tc :focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:3px}
+.tc-hero :focus-visible,.tc-illus :focus-visible,.tc-closing :focus-visible{outline-color:var(--color-pink)}
+
+/* buttons: one primary, one secondary */
+.tc-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:52px;padding:0 28px;border:1px solid transparent;border-radius:var(--radius-pill);
+  font:500 var(--text-small)/1.2 var(--font-secondary);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;
+  transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease)}
+.tc-btn--primary{background:var(--color-accent);color:var(--color-on-accent)}
+.tc-btn--secondary{background:var(--color-surface);color:var(--color-text);border-color:var(--color-text)}
+.tc-btn--light{background:transparent;color:var(--color-on-accent);border-color:var(--color-on-accent)}
+.tc-btn:disabled{opacity:.4;cursor:default}
+.tc-arrow{display:inline-block;transition:transform .18s var(--ease)}
+@media (hover:hover) and (pointer:fine){
+  .tc-btn--primary:hover{background:var(--color-accent-hover)}
+  .tc-btn--secondary:not(:disabled):hover{background:var(--color-pink);color:var(--color-text);border-color:var(--color-pink)}
+  .tc-btn:not(:disabled):hover .tc-arrow{transform:translateX(4px)}
+  .tc-btn:not(:disabled):hover .tc-arrow--back{transform:translateX(-4px)}
+}
+
+/* ---- hero (nubo-01-hero): full-bleed film, centred two-line display headline, one line, two pills ---- */
+.tc-hero{position:relative;isolation:isolate;display:grid;place-items:center;min-height:min(calc(100svh - 52px),1046px);overflow:hidden;color:var(--color-on-accent);text-align:center}
+.tc-hero-media{position:absolute;inset:0;z-index:-1;background:var(--color-text)}
+.tc-hero-film{width:100%;height:100%;object-fit:cover}
+.tc-hero-media::after{content:"";position:absolute;inset:0;background:var(--color-scrim)}
+.tc-hero-copy{width:min(1400px,100% - 2 * var(--space-gutter));padding-block:4rem}
+.tc-line{display:block}
+.tc-hero-sub{margin-top:var(--space-stack);color:var(--color-on-dark-muted)}
+.tc-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 24px;margin-top:clamp(1.75rem,3vw,2.5rem)}
+.tc-film-toggle{position:absolute;right:var(--space-gutter);bottom:clamp(1rem,3vw,2rem);min-height:44px;padding:0 18px;border:1px solid var(--color-on-dark-rule);border-radius:var(--radius-pill);
+  background:transparent;color:var(--color-on-dark-muted);cursor:pointer}
+
+/* ---- project overview (saleunion-02-about): centred label and statement, three facts in a row ---- */
+.tc-overview{text-align:center}
+.tc-statement{width:min(62%,760px);margin:var(--space-stack) auto 0;font-size:var(--text-h3);line-height:1.4}
+.tc-facts{counter-reset:fact;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-stack) clamp(1.5rem,4vw,4rem);margin-top:clamp(3rem,6vw,5.5rem);text-align:left}
+.tc-fact{counter-increment:fact;display:grid;grid-template-columns:76px 1fr;column-gap:20px;align-items:center}
+.tc-fact::before{content:counter(fact,decimal-leading-zero);grid-row:span 2;display:grid;place-items:center;width:76px;height:76px;border:1px solid var(--color-control-border);border-radius:50%;
+  font:500 var(--text-small)/1 var(--font-secondary)}
+.tc-fact:nth-child(2)::before{background:var(--color-pink);border-color:var(--color-pink)}
+.tc-fact dt{align-self:end}
+.tc-fact dd{align-self:start;font-size:var(--text-body)}
+
+/* ---- the gap and research (nubo-05-benefits): 34/66 split with the photo bleeding right, then a heading column and three cards ---- */
+.tc-research{padding-top:0}
+.tc-split{display:grid;grid-template-columns:34fr 66fr;min-height:clamp(26rem,40vw,38rem)}
+.tc-split-copy{display:flex;flex-direction:column;justify-content:center;gap:var(--space-stack);padding:clamp(2.5rem,5vw,5rem) clamp(1.5rem,3.5vw,3.25rem)}
+.tc-frame{overflow:hidden}
+.tc-split-media img,.tc-illus-media img,.tc-closing-media img{width:100%;height:100%;object-fit:cover}
+.tc-research-row{display:grid;grid-template-columns:27fr 73fr;gap:clamp(1.5rem,3vw,2.5rem);margin-top:clamp(3rem,6vw,5rem)}
+.tc-research-intro{display:flex;flex-direction:column;gap:var(--space-stack)}
+.tc-research-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tc-card{background:var(--color-surface);border-radius:var(--radius-2)}
+.tc-research-cards .tc-card{display:flex;flex-direction:column;gap:14px;padding:32px}
+.tc-research-cards p{color:var(--color-text-muted)}
+.tc-dot{display:grid;place-items:center;width:76px;height:76px;margin-bottom:10px;border-radius:50%;background:var(--color-pink);font:500 var(--text-small)/1 var(--font-secondary)}
+.tc-ruleline{display:flex;align-items:center;gap:24px;margin-top:clamp(2.5rem,5vw,4rem)}
+.tc-ruleline .tc-rule{flex:1}
+
+/* ---- logo construction (nubo-04-how-it-works): centred heading, three cards with half-height media ---- */
+.tc-head-center{display:flex;flex-direction:column;align-items:center;gap:var(--space-stack);text-align:center}
+.tc-head-center .tc-body{max-width:34rem}
+.tc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:clamp(2.5rem,5vw,4rem)}
+.tc-step{overflow:hidden}
+.tc-step-media{display:grid;place-items:center;aspect-ratio:3/2;background:var(--color-surface-alt)}
+.tc-part-solo{width:auto;height:62%}
+.tc-step-body{display:flex;flex-direction:column;gap:12px;padding:28px 32px 36px}
+.tc-step-body > p:last-child{color:var(--color-text-muted)}
+.tc-step-tag{display:flex;align-items:center;gap:14px}
+.tc-pill{font:600 var(--text-label)/1.5 var(--font-secondary);color:var(--color-accent-text)}
+.tc-assembled{display:none}
+
+/* ---- logo system (nubo-07-benefits-detail): a 3 x 2 mosaic, media and text tiles alternating ---- */
+/* logo system: a bento box, rounded tiles of different sizes in one grid, the photo standing tall beside the story */
+.tc-mosaic-sec{padding:0 var(--space-gutter)}
+.tc-mosaic{--bento-gap:16px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-areas:"lock lock grid grid lockups lockups" "scale scale scale scale scale scale";
+  grid-auto-rows:minmax(19rem,auto);gap:var(--bento-gap);max-width:1200px;margin:0 auto}
+.tc-mosaic > .tc-tile{border-radius:var(--radius-3)}
+.tc-b-lock{grid-area:lock}.tc-b-grid{grid-area:grid}.tc-b-lockups{grid-area:lockups}
+.tc-mosaic .tc-tile--text,.tc-mosaic .tc-tile--contain,.tc-mosaic .tc-b-scale{background:#F7F0EA}
+.tc-mosaic .tc-tile--text{justify-content:flex-end;padding:clamp(1.75rem,3vw,2.5rem)}
+.tc-mosaic .tc-tile--text .tc-h2{font-size:clamp(1.75rem,1rem + 1.8vw,2.6rem)}
+/* scalability: the same mark at 3x, 2x and 1x, standing on one baseline */
+.tc-b-scale{--u:64px;grid-area:scale;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:clamp(1.5rem,4vw,3rem);padding:clamp(1.75rem,3vw,2.5rem) clamp(1.75rem,4vw,3.5rem)}
+.tc-scale-copy{display:flex;flex-direction:column;gap:var(--space-stack);max-width:26rem}
+.tc-b-scale .tc-h2{font-size:clamp(1.75rem,1rem + 1.8vw,2.6rem)}
+.tc-scale-set{display:flex;align-items:flex-end;gap:clamp(1.25rem,3.5vw,3.5rem)}
+.tc-scale-item{display:grid;justify-items:center;gap:14px}
+.tc-scale-item img{width:calc(var(--s) * var(--u));height:auto}
+.tc-scale-x{font:500 1.125rem/1 var(--font-secondary);color:var(--color-text)}
+.tc-tile{position:relative;overflow:hidden;background:var(--color-surface)}
+.tc-tile--text{display:flex;flex-direction:column;justify-content:center;gap:var(--space-stack);padding:clamp(2rem,4vw,3.5rem)}
+.tc-rule--short{width:48px;background:var(--color-text-muted)}
+.tc-tile--contain{display:grid;place-items:center;align-content:center;gap:16px;padding:clamp(1.5rem,3vw,2.5rem)}
+.tc-tile--contain img{width:min(100%,455px);height:auto;border-radius:var(--radius-2)}
+.tc-tile--lockups{display:grid;place-items:center;align-content:center;gap:clamp(1rem,2vw,1.5rem);padding:clamp(1.5rem,3vw,2.5rem);background:var(--color-surface-alt)}
+.tc-tile--lockups img{height:auto;border-radius:var(--radius-2)}
+.tc-tile--lockups img:first-child{width:min(100%,465px)}
+.tc-tile--lockups img:last-child{width:min(72%,350px)}
+
+/* ---- typography (nubo-08-faq): centred heading over a 72% list of disclosure rows ---- */
+.tc-label--ruled{display:flex;flex-direction:column;align-items:center;gap:14px}
+.tc-label--ruled::after{content:"";width:48px;height:1px;background:currentColor}
+.tc-disclosure{display:grid;gap:8px;width:min(860px,100%);margin:clamp(2.5rem,5vw,3.5rem) auto 0}
+.tc-row{border:1px solid var(--color-divider);border-radius:var(--radius-2);background:var(--color-surface)}
+.tc-row-head{display:flex;align-items:center;gap:clamp(1rem,2.5vw,1.75rem);width:100%;min-height:76px;padding:14px clamp(1rem,2.5vw,1.75rem);border:0;background:none;color:inherit;text-align:left;cursor:pointer;
+  font:600 var(--text-h3)/1.2 var(--font-primary)}
+.tc-row-title{flex:1}
+.tc-aa{display:grid;place-items:center;flex:none;width:48px;height:48px;border-radius:50%;background:var(--color-surface-alt);font:600 var(--text-body)/1 var(--font-primary)}
+.tc-aa--sans,.tc-aa--label{font-family:var(--font-secondary);font-weight:500}
+.tc-aa--label{font-size:var(--text-label);letter-spacing:.12em}
+.tc-plus{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:var(--color-surface-alt)}
+.tc-plus::before,.tc-plus::after{content:"";position:absolute;left:50%;top:50%;width:16px;height:2px;margin:-1px 0 0 -8px;background:var(--color-text);transition:transform .24s var(--ease)}
+.tc-plus::after{transform:rotate(90deg)}
+.tc-row.is-open .tc-plus::after{transform:rotate(0deg)}
+.tc-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s var(--ease)}
+.tc-row.is-open .tc-panel{grid-template-rows:1fr}
+.tc-panel-inner{overflow:hidden;opacity:0;transform:translateY(8px);transition:opacity .24s var(--ease),transform .24s var(--ease)}
+.tc-row.is-open .tc-panel-inner{opacity:1;transform:none}
+.tc-panel-inner > *{margin-inline:clamp(1rem,2.5vw,1.75rem)}
+.tc-panel-inner > :first-child{margin-top:4px;padding-top:var(--space-stack);border-top:1px solid var(--color-divider)}
+.tc-panel-inner > :last-child{margin-bottom:clamp(1.25rem,2.5vw,1.75rem);color:var(--color-text-muted)}
+.tc-panel-inner > * + *{margin-top:14px}
+.tc-specimen-img{width:70%;height:auto}
+.tc-specimen-serif{font:400 var(--text-h1)/1.05 var(--font-specimen)}
+.tc-specimen-sans{font:400 var(--text-h3)/1.4 var(--font-secondary);color:var(--color-text)}
+.tc-more{display:grid;justify-items:center;gap:20px;margin-top:clamp(2rem,4vw,3rem)}
+
+/* ---- colour (nubo-09-stats): tall swatch, text card, two stacked swatches, on the Taupe-tint band ---- */
+.tc-palette{background:var(--color-surface-alt)}
+.tc-palette-top{text-align:center;margin-bottom:clamp(2rem,4vw,3rem)}
+.tc-palette-grid{display:grid;grid-template-columns:34fr 35fr 26fr;gap:12px;width:min(1440px,100% - 2 * var(--space-gutter));min-height:clamp(32rem,55vw,52rem);margin-inline:auto}
+.tc-swatch{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:clamp(1.5rem,3vw,2.75rem);border:0;border-radius:var(--radius-2);color:inherit;text-align:left;cursor:pointer;
+  transition:transform .24s var(--ease)}
+.tc-swatch .tc-label{color:inherit;transition:transform .24s var(--ease)}
+.tc-swatch-name{font:600 var(--text-h1)/1 var(--font-primary)}
+.tc-swatch--rust{background:var(--color-accent);color:var(--color-on-accent)}
+.tc-swatch--rust .tc-swatch-name{font-size:var(--text-display)}
+.tc-swatch--teal{background:var(--color-teal);color:var(--color-on-accent)}
+.tc-swatch--taupe{background:var(--color-taupe);color:var(--color-text)}
+.tc-palette-side{display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.tc-palette-text{display:flex;flex-direction:column;gap:var(--space-stack);padding:clamp(2rem,4vw,3.25rem)}
+.tc-palette-text .tc-rule{margin-top:auto}
+.tc-chips{display:flex;flex-wrap:wrap;gap:16px 32px}
+.tc-chip{display:flex;align-items:center;gap:14px;min-height:56px;padding:0;border:0;background:none;color:inherit;text-align:left;cursor:pointer}
+.tc-chip-dot{flex:none;width:56px;height:56px;border-radius:50%;transition:transform .2s var(--ease)}
+.tc-c-white{background:var(--color-on-accent);border:1px solid var(--color-control-border)}
+.tc-c-pink{background:var(--color-pink)}
+.tc-chip-name{display:block;font:600 var(--text-body)/1.3 var(--font-primary)}
+.tc-hint{font-size:var(--text-small);color:var(--color-text-muted)}
+.tc-status{min-height:1.5em;color:var(--color-accent-text)}
+@media (hover:hover) and (pointer:fine){
+  .tc-swatch:hover{transform:translateY(-6px)}
+  .tc-swatch:hover .tc-label{transform:translateY(-8px)}
+  .tc-chip:hover .tc-chip-dot{transform:scale(1.08)}
+}
+.tc-swatch:focus-visible{transform:translateY(-6px)}
+
+/* ---- illustration (nubo-11-testimonial): left heading, right mark block, three cards with media on top; the one Deep Teal section ---- */
+.tc-arch{display:block;height:100%;aspect-ratio:1/1.15;border-radius:var(--radius-pill) var(--radius-pill) 0 0}
+.tc-arch img{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+@media (hover:hover) and (pointer:fine){
+}
+
+/* ---- applications (nubo-10-pricing): centred heading, a snapping row of cards with the centred one featured ---- */
+.tc-apps .tc-body{max-width:40rem}
+.tc-app-row{--card:min(30vw,440px);display:flex;gap:24px;margin-top:clamp(2.5rem,5vw,3.5rem);padding:24px calc(50% - var(--card) / 2) 32px;overflow-x:auto;
+  scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--color-divider) transparent;overscroll-behavior-x:contain}
+.tc-app-row.is-dragging{scroll-snap-type:none;cursor:grabbing;user-select:none}
+@media (pointer:fine){.tc-app-row{cursor:grab}}
+.tc-app{flex:0 0 var(--card);overflow:hidden;scroll-snap-align:center;transition:translate .22s var(--ease)}
+.tc-app-head{display:flex;flex-direction:column;gap:4px;padding:20px 24px;background:var(--color-surface-alt);transition:background-color .22s var(--ease),color .22s var(--ease)}
+.tc-app-head .tc-label{color:inherit}
+.tc-app-cap{font:600 var(--text-h3)/1.2 var(--font-primary)}
+.tc-app-media{aspect-ratio:4/3.4;overflow:hidden}
+.tc-app-media img{width:calc(100% + 48px);max-width:none;height:100%;margin-left:-24px;object-fit:cover;-webkit-user-drag:none}
+.tc-app.is-active{translate:0 -12px}
+.tc-app.is-active .tc-app-head{background:var(--color-accent);color:var(--color-on-accent)}
+.tc-app-controls{display:flex;align-items:center;justify-content:center;gap:clamp(1rem,3vw,2rem);margin-top:clamp(1.5rem,3vw,2.25rem)}
+.tc-counter{min-width:5.5em;text-align:center}
+
+/* ---- closing (saleunion-13-cta): full-bleed monochrome photo, centred serif statement and two pills ---- */
+.tc-closing{position:relative;isolation:isolate;display:grid;place-items:center;min-height:min(78vh,52rem);overflow:hidden;color:var(--color-on-accent);text-align:center}
+.tc-closing-media{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--color-text)}
+.tc-closing-media::after{content:"";position:absolute;inset:0;background:var(--color-scrim)}
+.tc-closing-copy{display:flex;flex-direction:column;align-items:center;gap:var(--space-stack);width:min(940px,100% - 2 * var(--space-gutter));padding-block:var(--space-section)}
+.tc-closing .tc-label{color:var(--color-on-dark-muted)}
+.tc-closing .tc-em{color:var(--color-pink)}
+.tc-closing .tc-actions{margin-top:0}
+
+/* ---- medium: 720 to 1099px ---- */
+@media (max-width:1099px){
+  .tc-hero .tc-display{font-size:var(--text-h1)}
+  .tc-statement{width:80%}
+  .tc-fact{grid-template-columns:60px 1fr}
+  .tc-fact::before{width:60px;height:60px}
+  .tc-split{grid-template-columns:45fr 55fr}
+  .tc-research-row{grid-template-columns:1fr}
+  .tc-research-intro{max-width:36rem}
+  .tc-step-body > p:last-child{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .tc-mosaic{grid-template-columns:1fr 1fr;grid-template-areas:"lock lock" "grid lockups" "scale scale"}
+  .tc-disclosure{width:min(86%,860px)}
+  .tc-palette-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+  .tc-swatch--rust{grid-row:span 2}
+  .tc-palette-side{grid-template-rows:none;grid-template-columns:1fr 1fr;min-height:14rem}
+  .tc-app-row{--card:min(44vw,440px)}
+}
+
+/* ---- compact: below 720px ---- */
+@media (max-width:719px){
+  .tc-hero{place-items:stretch;min-height:calc(100svh - 52px);text-align:left}
+  .tc-hero-copy{display:flex;flex-direction:column;width:auto;padding:13svh var(--space-gutter) 12svh calc(var(--space-gutter) + 4vw)}
+  .tc-hero .tc-display{font-size:var(--text-display)}
+  .tc-hero .tc-actions{flex-direction:column;margin-top:auto;padding-top:2.5rem}
+  .tc-hero .tc-btn{width:100%}
+  .tc-film-toggle{top:1rem;bottom:auto}
+  .tc-statement{width:100%}
+  .tc-facts{grid-template-columns:1fr;gap:28px;width:fit-content;margin-inline:auto}
+  .tc-split{grid-template-columns:1fr}
+  .tc-split-media{margin-inline:var(--space-gutter);aspect-ratio:4/3;border-radius:var(--radius-2)}
+  .tc-research-cards{grid-template-columns:1fr}
+  .tc-research-cards .tc-card{display:grid;grid-template-columns:76px 1fr;column-gap:20px;row-gap:6px;padding:20px}
+  .tc-research-cards .tc-dot{grid-row:span 2;margin:0}
+  .tc-ruleline{flex-direction:column;gap:16px;text-align:center}
+  .tc-ruleline .tc-rule{width:48px;flex:none}
+  .tc-assembled{position:relative;display:grid;place-items:center;aspect-ratio:4/3;margin-top:2rem;background:var(--color-surface-alt)}
+  .tc-tag{position:absolute;left:16px;top:16px;padding:6px 14px;border-radius:var(--radius-pill);background:var(--color-surface);color:var(--color-text)}
+  .tc-steps{grid-template-columns:1fr;gap:0;margin-top:1rem}
+  .tc-step{display:grid;grid-template-columns:104px 1fr;gap:20px;align-items:start;padding:24px 0;border-radius:0;background:none;border-top:1px solid var(--color-divider)}
+  .tc-step:first-child{border-top:0}
+  .tc-step-media{aspect-ratio:1;border-radius:var(--radius-3)}
+  .tc-step-body{padding:0}
+  .tc-step-body > p:last-child{-webkit-line-clamp:unset;display:block}
+  .tc-mosaic{--bento-gap:12px;grid-template-columns:1fr;grid-template-areas:"lock" "grid" "lockups" "scale";grid-auto-rows:auto}
+  .tc-b-scale{grid-template-columns:1fr;--u:44px}
+  .tc-tile--contain,.tc-tile--lockups{min-height:18rem}
+  .tc-disclosure{width:100%}
+  .tc-row-head{min-height:64px}
+  .tc-aa{display:none}
+  .tc-specimen-img{width:100%}
+  .tc-more .tc-btn{width:100%}
+  .tc-palette-grid{grid-template-columns:1fr}
+  .tc-swatch--rust{grid-row:auto;min-height:16rem}
+  .tc-palette-text{order:-1}
+  .tc-swatch--rust{order:-2}
+  .tc-palette-side{grid-template-columns:1fr;min-height:0}
+  .tc-palette-side .tc-swatch{min-height:11rem}
+  .tc-app-row{--card:80vw;gap:14px}
+  .tc-app-controls .tc-btn{padding:0 18px}
+  .tc-closing{min-height:90svh}
+  .tc-closing .tc-actions{flex-direction:column;width:100%}
+  .tc-closing .tc-btn{width:100%}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .tc-btn,.tc-arrow,.tc-swatch,.tc-swatch .tc-label,.tc-chip-dot,.tc-plus::before,.tc-plus::after,.tc-panel,.tc-panel-inner,.tc-app,.tc-app-head{transition:none !important}
+  .tc-app.is-active{translate:none}
+  .tc-swatch:hover,.tc-swatch:focus-visible,.tc-swatch:hover .tc-label{transform:none}
+}
+
+/* logo anatomy: the assembled mark, its three parts named around it, joined by hand-drawn arrows (a 1100 x 560 stage) */
+.tc-anatomy{position:relative;aspect-ratio:1100/560;margin:clamp(2.5rem,5vw,4rem) 0 0}
+.tc-anat-logo{position:absolute;left:33.8%;top:17%;width:32.45%;height:auto}
+.tc-arrows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.tc-arrows path{fill:none;stroke:var(--color-text);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.tc-anatomy.is-drawn .tc-arrows path{stroke-dashoffset:0;transition:stroke-dashoffset .7s var(--ease) var(--d)}
+.tc-anatomy.is-drawn .tc-arrows .tc-head{transition-duration:.25s;transition-delay:calc(var(--d) + .65s)}
+.tc-note{position:absolute;width:25%;display:flex;flex-direction:column;gap:10px}
+.tc-note > p:last-child{color:var(--color-text-muted);font-size:var(--text-small)}
+.tc-note-title{font:600 clamp(1.125rem,.9rem + .7vw,1.5rem)/1.25 var(--font-primary)}
+.tc-note--window{left:0;top:21%}
+.tc-note--whisk{left:75%;top:4%}
+.tc-note--circle{left:75%;top:61%}
+@media (max-width:900px){
+  .tc-anatomy{aspect-ratio:auto;display:grid;gap:28px;justify-items:center}
+  .tc-anat-logo{position:relative;left:auto;top:auto;width:min(60%,260px)}
+  .tc-arrows{display:none}
+  .tc-note,.tc-note--window{position:static;width:100%;align-items:flex-start;text-align:left;padding-top:24px;border-top:1px solid var(--color-divider)}
+}
+@media (prefers-reduced-motion:reduce){.tc-arrows path{transition:none!important}}
+
+/* illustration: the regulars as stickers on the strip's own rust; on wide screens the section holds still
+   while they run across it (terracotta.js sets its height and moves them); otherwise a swipe row */
+.tc-illus{--rust:#BD5729;position:relative;background:var(--rust);color:var(--color-on-accent)}
+.tc-illus .tc-label,.tc-illus .tc-body{color:var(--color-on-accent)}
+.tc-illus-pin{display:flex;flex-direction:column;justify-content:center;gap:clamp(2rem,5vh,3.5rem);padding-block:var(--space-section)}
+.tc-illus-head{display:flex;flex-direction:column;gap:var(--space-stack);max-width:min(100%,46rem);margin-left:max(var(--space-gutter),calc((100% - 1200px) / 2));margin-right:auto}
+.tc-illus-run{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:28px var(--space-gutter)}
+.tc-illus-run::-webkit-scrollbar{display:none}
+.tc-illus-track{display:flex;align-items:center;gap:clamp(1.5rem,3vw,3rem);width:max-content}
+.tc-sticker{flex:none;height:clamp(170px,30vw,300px);width:auto;scroll-snap-align:center;filter:drop-shadow(0 10px 14px rgb(60 20 5 / .28));user-select:none}
+.tc-illus.is-running .tc-illus-pin{position:sticky;top:0;height:100vh;padding-block:88px 32px;justify-content:flex-start;gap:clamp(1.25rem,4vh,3rem);overflow:hidden}
+.tc-illus.is-running .tc-h1{font-size:min(var(--text-h1),10vh)}
+/* the run takes only the height the text leaves; a sticker fits in it with room for its bob (22px each way, terracotta.js)
+   and its grow (to 1.14x) as it passes the middle, so it never reaches the text or the bottom edge */
+.tc-illus.is-running .tc-illus-run{flex:1 1 0;min-height:0;overflow:visible;padding:0}
+.tc-illus.is-running .tc-illus-track{height:100%;will-change:transform}
+.tc-illus.is-running .tc-sticker{height:min(360px,calc((100% - 44px) / 1.14));will-change:transform}
+
+/* menu: an A4 menu as a book. The spread is two pages wide; closed, the cover sits centred on its own.
+   Each leaf turns on the spine (its left edge); phones get a swipe row of single pages instead */
+.tc-menu .tc-body{max-width:36rem}
+.tc-book{--page:min(44vw,540px);position:relative;width:calc(var(--page) * 2);aspect-ratio:2002/1415;margin:clamp(2.5rem,5vw,4rem) auto 0;perspective:2600px;cursor:pointer;outline-offset:8px}
+.tc-book-inner{position:absolute;inset:0;transition:transform .9s cubic-bezier(.3,.1,.2,1)}
+.tc-book[data-open="0"] .tc-book-inner{transform:translateX(-25%)}
+.tc-leaf{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.1,.2,1)}
+.tc-leaf.is-turned{transform:rotateY(-180deg)}
+.tc-face{position:absolute;inset:0;backface-visibility:hidden;background:#fff;overflow:hidden;box-shadow:0 18px 40px -18px rgb(23 16 11 / .35)}
+.tc-face img{width:100%;height:100%;object-fit:cover}
+.tc-face:empty{background:none;box-shadow:none}
+.tc-face--front{border-radius:0 6px 6px 0}
+.tc-face--back{transform:rotateY(180deg);border-radius:6px 0 0 6px}
+/* a soft fold shadow along the spine */
+.tc-face--front::after,.tc-face--back::after{content:"";position:absolute;inset:0;pointer-events:none}
+.tc-face--front::after{background:linear-gradient(90deg,rgb(0 0 0 / .14),transparent 7%)}
+.tc-face--back::after{background:linear-gradient(270deg,rgb(0 0 0 / .14),transparent 7%)}
+.tc-book-nav{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:clamp(1.75rem,3vw,2.5rem)}
+.tc-book-at{min-width:9.5rem;text-align:center}
+.tc-menu-pdf{margin-top:18px;text-align:center;font-size:var(--text-small)}
+.tc-menu-pdf a{color:var(--color-accent-text)}
+.tc-menu-strip{display:none}
+@media (max-width:760px){
+  .tc-book,.tc-book-nav{display:none}
+  .tc-menu-strip{display:flex;gap:14px;margin-top:2rem;padding:0 var(--space-gutter) 8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .tc-menu-strip li{flex:none;width:78vw;scroll-snap-align:center;box-shadow:0 14px 30px -16px rgb(23 16 11 / .35)}
+  .tc-menu-strip img{width:100%;height:auto}
+}
+@media (prefers-reduced-motion:reduce){.tc-leaf,.tc-book-inner{transition:none}}
