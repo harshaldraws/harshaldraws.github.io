@@ -373,7 +373,7 @@ figcaption{margin-top:10px;font-size:.85rem;font-weight:500}
   .pile-note{width:min(56vw,220px)}
   h1 .draws{left:calc(4 * var(--cell));top:calc(7.15 * var(--cell))}
   .pens{width:84%;right:-34%;bottom:-3%}
-  .sharpener{left:24%;top:4%;width:32%}
+  .sharpener{left:0;top:3%;width:30%} /* top left, clear of the diary in the top right */
   .ruler{left:-4%;width:96%}
   .desk-book{width:62%}
   .hero{--lx:54.5%;--ly:45%;--lw:94%;--lh:77%} /* as on desktop: centred on the name, lighting the name and the titles */
