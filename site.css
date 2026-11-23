@@ -7,7 +7,7 @@ body.gs[data-page=welcome]{background:#fff}
 .site-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:14px clamp(16px,3vw,40px);background:#f2f2f2;box-shadow:0 1px 0 rgba(0,0,0,.06)}
 .site-home{font-size:22px;line-height:1;text-decoration:none}
-.site-nav{display:flex;gap:clamp(14px,2.2vw,28px)}
+.site-nav{display:flex;gap:clamp(14px,2.2vw,28px);margin-left:auto}
 .site-nav a{color:#1c1c1c;text-decoration:none;white-space:nowrap}
 .site-nav a[aria-current]{font-weight:700}
 .site-nav a:hover{text-decoration:underline;text-underline-offset:4px}
@@ -17,6 +17,9 @@ body.gs[data-page=welcome]{background:#fff}
 .welcome-main .hero{min-height:0;max-height:none}
 .gs-embed{display:block;width:100%;border:0;margin-top:clamp(24px,3vw,49px);background:transparent}
 .gs-embed.about{aspect-ratio:1154/392}
+/* the light and dark copies of a frame share one place; only the one for the current mode shows (site.js) */
+.embed-stack{position:relative}
+.embed-stack > .gs-embed:not(.on){position:absolute;left:0;right:0;bottom:0;visibility:hidden;pointer-events:none}
 .gs-embed.skills{aspect-ratio:1154/418}
 .cta{margin:clamp(24px,3vw,40px) 0 0;text-align:center}
 .gs-btn{box-sizing:border-box;display:inline-block;padding:10px 26px;border:1px solid currentColor;border-radius:4px;color:inherit;text-decoration:none;font-weight:500;transition:background .2s,color .2s}
@@ -54,6 +57,14 @@ body.gs[data-page=welcome]{background:#fff}
 @media (max-width:860px){
   .site-head{padding:12px 12px;gap:10px}
   .site-nav{gap:11px;font-size:13.5px}
+}
+/* phones: the home icon and the dark mode switch on one row, the links in a row of their own under them */
+@media (max-width:600px){
+  .site-head{flex-wrap:wrap;row-gap:8px;padding:10px 14px}
+  .site-nav{order:3;width:100%;margin-left:0;justify-content:space-between;gap:8px;font-size:14px}
+}
+@media (max-width:370px){.site-nav{gap:4px;font-size:12.5px}}
+@media (max-width:860px){
   .gs-embed.about{aspect-ratio:2/1} /* its own phone frame is 960 x 480 */
   .gs-embed.skills{aspect-ratio:auto;height:760px}
   .grid-gs{grid-template-columns:1fr}
@@ -196,3 +207,40 @@ body.gs[data-page=project]{background:#fff}
 
 /* a handwritten caption under the cutting mat on the Welcome page */
 .mat-caption{margin:14px 0 0;text-align:right;padding-right:clamp(8px,2vw,24px);font:400 clamp(1.6rem,1.1rem + 1.4vw,2.4rem)/1 "Reenie Beanie",cursive;color:#4084a6;rotate:-2deg}
+
+/* the dark mode switch in the top bar: a track with a sliding knob, the moon side when off and the sun side when on (site.js) */
+.theme-switch{flex:none;display:grid;place-items:center;margin:-4px -4px -4px 0;padding:4px;border:0;border-radius:99px;background:none;cursor:pointer}
+.ts-track{position:relative;width:44px;height:24px;border-radius:99px;background:#d9d9d9;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);transition:background .25s}
+.ts-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .25s cubic-bezier(.3,.7,.3,1)}
+.ts-knob::after{content:"";position:absolute;inset:4px;border-radius:50%;box-shadow:inset -3px -2px 0 0 #555;transform:rotate(-30deg)} /* a crescent moon */
+.theme-switch[aria-checked=true] .ts-track{background:#F6A51F;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.theme-switch[aria-checked=true] .ts-knob{left:23px;background:#FFF8E8}
+.theme-switch[aria-checked=true] .ts-knob::after{inset:5px;background:#F6A51F;box-shadow:0 0 0 2px rgba(246,165,31,.35)} /* a sun */
+.theme-switch:hover .ts-track{filter:brightness(1.08)}
+.theme-switch:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+
+/* ---- dark mode, everywhere (html[data-theme=dark], from the switch on the mat or in the header) ---- */
+html[data-theme=dark]{color-scheme:dark}
+html[data-theme=dark] body.gs{background:#121212;color:#ececec}
+html[data-theme=dark] body.gs[data-page=welcome]{background:#000}
+html[data-theme=dark] body.gs[data-page=project]{background:#121212}
+html[data-theme=dark] .site-head{background:#1b1b1b;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+html[data-theme=dark] .site-head.scrolled{background:rgba(27,27,27,.62);box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 8px 30px rgba(0,0,0,.5)}
+html[data-theme=dark] .site-nav a{color:#ececec}
+html[data-theme=dark] .site-foot{background:#1b1b1b;color:#ececec}
+html[data-theme=dark] .site-foot .social a{background:#ececec}
+html[data-theme=dark] .site-foot svg{fill:#1b1b1b}
+html[data-theme=dark] .gs-btn:hover{background:#ececec;color:#121212}
+html[data-theme=dark] .skip:focus{background:#ececec;color:#121212}
+html[data-theme=dark] .tile .name{color:#d4d6da}
+html[data-theme=dark] .tile:hover .pic,html[data-theme=dark] .tile:focus-visible .pic{box-shadow:0 18px 40px rgba(0,0,0,.6)}
+html[data-theme=dark] .print{color:#ececec}
+html[data-theme=dark] .wall-title{color:#ececec}
+html[data-theme=dark] .wall-title .t2{color:#a8a8a8}
+html[data-theme=dark] .pic.loading::after,html[data-theme=dark] .wall-gs.laying::after{border-color:rgba(255,255,255,.14);border-top-color:rgba(255,255,255,.6)}
+html[data-theme=dark] .band.clay{background:#2a2622}
+html[data-theme=dark] .details,html[data-theme=dark] .details dt{color:#ececec}
+html[data-theme=dark] .details a,html[data-theme=dark] .p-link a{color:#7fb0ff}
+html[data-theme=dark] .p-feature{color:#b4b4b4}
+html[data-theme=dark] .p-feature h2{color:#8cc287}
+html[data-theme=dark] .drift-track img{box-shadow:0 2px 3px rgba(0,0,0,.4),0 12px 26px rgba(0,0,0,.5)}

@@ -111,12 +111,12 @@ function rulerLight() {
   ruler.style.setProperty('--rf', Math.max(0, Math.min(3, Math.round(1 + 2 * parseFloat(hero.dataset.swing ?? 0))))); // 0..3: which photo; rests on the second
 }
 
-// ---- the desk lamp: on at first if the visitor's device is in dark mode; the dark mode switch turns it on and off ----
+// ---- the desk lamp: on at first if the visitor's device is in dark mode; the dark mode switch in the top bar turns it on and off ----
 {
-  const hero = $('.hero'), sw = $('.lights'), dark = matchMedia('(prefers-color-scheme: dark)');
+  const hero = $('.hero'), dark = matchMedia('(prefers-color-scheme: dark)');
   let chosen = null; // set once the visitor uses the switch; until then the lamp follows the device
   try { chosen = localStorage.getItem('lamp'); } catch {}
-  const set = (on) => { hero.classList.toggle('lamp', on); sw.setAttribute('aria-checked', on); sw.lastChild.textContent = on ? 'Dark mode on' : 'Dark mode off'; hero.dispatchEvent(new Event('lamp')); lampOnAll(); };
+  const set = (on) => { setTheme(on); hero.classList.toggle('lamp', on); hero.dispatchEvent(new Event('lamp')); lampOnAll(); };
   dark.addEventListener('change', (e) => { if (chosen) return; if (e.matches) set(true); else switchOff(); });
   new ResizeObserver(lampOnAll).observe(hero);
   // switching the lamp on: a beat, the bulb catches with a flicker, then the jolt of the switch sets the lamp head
@@ -177,13 +177,14 @@ function rulerLight() {
 
   set(chosen ? chosen === 'on' : dark.matches); // the lamp's starting state: the visitor's last choice, else their device
 
-  sw.addEventListener('click', () => {
+  // the dark mode switch in the top bar (site.js) turns the lamp on and off, flicker and sound included
+  window.toggleLamp = () => {
     const on = !hero.classList.contains('lamp');
     chosen = on ? 'on' : 'off';
     clack(on);
     if (on && !still) switchOn(); else if (on) set(true); else switchOff();
     try { localStorage.setItem('lamp', chosen); } catch {}
-  });
+  };
 }
 
 // ---- letters lift off the mat as the cursor passes over them ----

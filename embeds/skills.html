@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>/* light or dark: the page around it passes ?theme=dark in this frame's address (site.js) */var DARK=new URLSearchParams(location.search).get("theme")==="dark";document.documentElement.classList.toggle("dark",DARK);/* the page keeps a light and a dark copy of this frame and pauses the hidden one */window.PAUSED=false;addEventListener("message",function(e){if(e.source!==parent)return;if(e.data==="pause")PAUSED=true;if(e.data==="play")PAUSED=false;});</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Core Skills &amp; Core Toolkit</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--ink:#1c1c1c;color-scheme:light}
+html.dark{--ink:#fff;color-scheme:dark}
 html,body{height:100%;margin:0}
 body{background:transparent;color:var(--ink);font-family:"Inter","Segoe UI",system-ui,sans-serif;overflow:hidden;position:relative}
 #wrap{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr}
@@ -79,7 +82,7 @@ function compose(){
 sc.clearRect(0,0,S,S);
 sc.save();
 o.clipPath(sc);
-sc.fillStyle="rgba(28,28,28,0.06)"; sc.fill();
+sc.fillStyle=DARK?"rgba(255,255,255,0.24)":"rgba(28,28,28,0.06)"; sc.fill();
 if(prog>0.001){
 sc.clip();
 var corners=[[0,0],[S,0],[0,S],[S,S]],Rm=0;
@@ -123,8 +126,8 @@ mg.addColorStop(0,"rgba(0,0,0,1)");mg.addColorStop(0.45,"rgba(0,0,0,0.6)");mg.ad
 gmx.fillStyle=mg;gmx.fillRect(0,0,S,S);
 gmx.globalCompositeOperation="source-over";
 sc.save();o.clipPath(sc);sc.clip();
-sc.globalCompositeOperation="screen"; /* lightens: on the white page the glow brightens the colour, never darkens it */
-sc.globalAlpha=ga*0.6;sc.drawImage(gmc,0,0);
+sc.globalCompositeOperation=DARK?"color-burn":"screen"; /* on the white page the glow lightens the colour, never darkens it */
+sc.globalAlpha=ga*(DARK?0.85:0.6);sc.drawImage(gmc,0,0);
 sc.restore();
 }
 blurDirty=true;
@@ -162,8 +165,8 @@ return self;
 /* BackFaces: renders the far-side faces (seen through the selected face) using the blurred texture.
    They fade in only while a face is selected; all other faces stay sharp. */
 window.BackFaces=function(shell,fxs,parent){
-var FAR=0.28; /* on the white page the far faces show faintly in their own colours, like print through frosted glass */
-var bm=fxs.map(function(f){return new THREE.MeshBasicMaterial({map:f.backTex,color:0xffffff,transparent:true,opacity:FAR,side:THREE.BackSide,depthWrite:false});});
+var FAR=DARK?1:0.28; /* on the white page the far faces show faintly in their own colours, like print through frosted glass */
+var bm=fxs.map(function(f){return new THREE.MeshBasicMaterial({map:f.backTex,color:DARK?0x444444:0xffffff,transparent:true,opacity:FAR,side:THREE.BackSide,depthWrite:false});});
 var m=new THREE.Mesh(shell.geometry,bm);m.renderOrder=-2;m.visible=true;parent.add(m);
 var op=1;
 return {update:function(on){
@@ -225,14 +228,14 @@ depthTest:false,depthWrite:false});
    On the white page the glass lays a soft trace of the dark back-lines over the faces (alpha only), so the faces stay light. */
 var cMat=new THREE.ShaderMaterial({uniforms:{t:{value:rtB.texture},d:{value:new THREE.Vector2()},gain:{value:7},uRes:{value:new THREE.Vector2(1,1)}},
 vertexShader:"void main(){gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
-fragmentShader:"uniform sampler2D t;uniform vec2 d;uniform float gain;uniform vec2 uRes;void main(){vec2 vUv=gl_FragCoord.xy/uRes;"+TAPS+"gl_FragColor=vec4(vec3(0.45),min(c.a*gain*0.35,0.12));}",
-transparent:true,blending:THREE.NormalBlending,side:THREE.FrontSide,depthTest:true,depthWrite:false});
+fragmentShader:"uniform sampler2D t;uniform vec2 d;uniform float gain;uniform vec2 uRes;void main(){vec2 vUv=gl_FragCoord.xy/uRes;"+TAPS+(DARK?"gl_FragColor=vec4(min(c.rgb*gain,vec3(0.3)),1.0);}":"gl_FragColor=vec4(vec3(0.45),min(c.a*gain*0.35,0.12));}"),
+transparent:true,blending:DARK?THREE.AdditiveBlending:THREE.NormalBlending,side:THREE.FrontSide,depthTest:true,depthWrite:false});
 var postScene=new THREE.Scene(),postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
 var q1=new THREE.Mesh(new THREE.PlaneGeometry(2,2),hMat);q1.frustumCulled=false;postScene.add(q1);
 var glass=new THREE.Mesh(shell.geometry,cMat);glass.renderOrder=-1.5;parent.add(glass);
 
 lines.forEach(function(l){
-var lb=new THREE.Line(l.geometry,new THREE.LineBasicMaterial({color:0x4084a6,transparent:true,opacity:0,depthWrite:false}));
+var lb=new THREE.Line(l.geometry,new THREE.LineBasicMaterial({color:DARK?0xffffff:0x4084a6,transparent:true,opacity:0,depthWrite:false}));
 l.userData.base=l.material.opacity;l.userData.pair=lb;lb.userData=l.userData;
 lb.layers.set(1);lb.frustumCulled=false;l.parent.add(lb);
 });
@@ -368,11 +371,11 @@ var fx=GrainFace({
 fill:pal.fill,text:pal.text,
 clipPath:function(c){pathP(c,false);},
 drawBorder:function(c){
-c.lineWidth=2.5;c.lineCap="round";c.lineJoin="round";c.strokeStyle="rgba(64,132,166,0.9)"; for(var p=0;p<2;p++){pathP(c,true);c.stroke();}
+c.lineWidth=2.5;c.lineCap="round";c.lineJoin="round";c.strokeStyle=DARK?"rgba(255,255,255,0.8)":"rgba(64,132,166,0.9)"; for(var p=0;p<2;p++){pathP(c,true);c.stroke();}
 },
 drawLabel:function(c,hot){
 var s=512;
-c.fillStyle=hot?pal.text:"#1c1c1c";
+c.fillStyle=hot?pal.text:(DARK?"#fff":"#1c1c1c");
 c.textAlign="center";c.textBaseline="middle";
 c.shadowColor="rgba(0,0,0,0.25)";c.shadowBlur=8;
 var im=IMG[i],lw=0,lh=0;
@@ -403,7 +406,7 @@ var back=BackFaces(shell,fxs,solid);
 
 
 var core=new THREE.Mesh(
-new THREE.DodecahedronGeometry(R3*0.99), new THREE.MeshBasicMaterial({color:0x1c1c1c,transparent:true,opacity:0.10,side:THREE.BackSide,depthWrite:false})
+new THREE.DodecahedronGeometry(R3*0.99), new THREE.MeshBasicMaterial({color:DARK?0xffffff:0x1c1c1c,transparent:true,opacity:0.10,side:THREE.BackSide,depthWrite:false})
 );
 core.renderOrder=-2;solid.add(core);
 
@@ -418,7 +421,7 @@ E.forEach(function(e){
 for(var s=0;s<STR;s++){
 var g=new THREE.BufferGeometry();
 g.setAttribute("position",new THREE.BufferAttribute(new Float32Array(PTS*3),3));
-var l=new THREE.Line(g,new THREE.LineBasicMaterial({color:0x4084a6,transparent:true,opacity:0.9-s*0.22,depthWrite:false}));
+var l=new THREE.Line(g,new THREE.LineBasicMaterial({color:DARK?0xffffff:0x4084a6,transparent:true,opacity:0.9-s*0.22,depthWrite:false}));
 l.userData={a:e[0],b:e[1]};l.renderOrder=-3;sketch.add(l);lines.push(l);
 }
 });
@@ -443,7 +446,7 @@ var edges=EdgeBlur(renderer,scene,camera,solid,lines,R3,shell);
 /* centre text */
 var lc=document.createElement("canvas");lc.width=512;lc.height=128;
 var lt=lc.getContext("2d");
-lt.fillStyle="#1c1c1c";lt.textAlign="center";lt.textBaseline="middle";
+lt.fillStyle=DARK?"#fff":"#1c1c1c";lt.textAlign="center";lt.textBaseline="middle";
 lt.shadowColor="rgba(0,0,0,0.35)";lt.shadowBlur=10;
 lt.font="700 72px Inter, Segoe UI, sans-serif";
 lt.fillText("Core Toolkit",256,64);
@@ -470,13 +473,13 @@ mouse.set(((e.clientX-rc.left)/rc.width)*2-1,-((e.clientY-rc.top)/rc.height)*2+1
 ray.setFromCamera(mouse,camera);
 return ray.intersectObject(shell)[0]||null;
 }
-var coreCol=new THREE.Color(0x1c1c1c),coreOp=0.10;
+var coreCol=new THREE.Color(DARK?0xffffff:0x1c1c1c),coreOp=0.10;
 function setHover(h){
 var i=h?h.face.materialIndex:-1;
 if(i!==hover){
 if(hover>=0)fxs[hover].set(false);
 if(i>=0){coreCol.set(PAL[i].fill);coreOp=0.18;}
-else{coreCol.set(0x1c1c1c);coreOp=0.10;}
+else{coreCol.set(DARK?0xffffff:0x1c1c1c);coreOp=0.10;}
 for(var k=0;k<fxs.length;k++)fxs[k].setBack(true);
 hover=i;
 }
@@ -526,6 +529,7 @@ requestAnimationFrame(follow);
 
 var clock=new THREE.Clock(),lastT=0;
 function tick(){
+if(PAUSED){requestAnimationFrame(tick);return;}
 var t=clock.getElapsedTime();
 var dt=Math.min(0.05,t-lastT);lastT=t;
 if(!dragging){
@@ -591,7 +595,7 @@ var fx=GrainFace({
 fill:pal.fill,text:pal.text,
 clipPath:function(c){roundRect(c,10,10,s-20,s-20,12);},
 drawBorder:function(c){
-c.lineWidth=2.5;c.lineCap="round";c.lineJoin="round";c.strokeStyle="rgba(64,132,166,0.9)"; for(var p=0;p<2;p++){
+c.lineWidth=2.5;c.lineCap="round";c.lineJoin="round";c.strokeStyle=DARK?"rgba(255,255,255,0.8)":"rgba(64,132,166,0.9)"; for(var p=0;p<2;p++){
 c.beginPath();
 for(var side=0;side<4;side++){
 var A=pts[side],B=pts[side+1];
@@ -607,7 +611,7 @@ c.stroke();
 }
 },
 drawLabel:function(c,hot){
-c.fillStyle=hot?pal.text:"#1c1c1c";
+c.fillStyle=hot?pal.text:(DARK?"#fff":"#1c1c1c");
 c.textAlign="center";
 c.textBaseline="middle";
 glowBlob(c,256,230,200,150);
@@ -642,7 +646,7 @@ var back=BackFaces(shell,fxs,cube);
 
 var core=new THREE.Mesh(
 new THREE.BoxGeometry(S*0.995,S*0.995,S*0.995),
-new THREE.MeshBasicMaterial({ color:0x1c1c1c, transparent:true, opacity:0.10,
+new THREE.MeshBasicMaterial({ color:DARK?0xffffff:0x1c1c1c, transparent:true, opacity:0.10,
 side:THREE.BackSide,
 depthWrite:false
 })
@@ -672,7 +676,7 @@ E.forEach(function(e){
 for(var s=0;s<STR;s++){
 var g=new THREE.BufferGeometry();
 g.setAttribute("position",new THREE.BufferAttribute(new Float32Array(PTS*3),3));
-var l=new THREE.Line(g,new THREE.LineBasicMaterial({ color:0x4084a6, transparent:true, opacity:0.9-s*0.22,
+var l=new THREE.Line(g,new THREE.LineBasicMaterial({ color:DARK?0xffffff:0x4084a6, transparent:true, opacity:0.9-s*0.22,
 depthWrite:false
 }));
 l.userData={a:e[0],b:e[1]};
@@ -717,7 +721,7 @@ lc.width=512;
 lc.height=128;
 
 var lt=lc.getContext("2d");
-lt.fillStyle="#1c1c1c";
+lt.fillStyle=DARK?"#fff":"#1c1c1c";
 lt.textAlign="center";
 lt.textBaseline="middle";
 lt.shadowColor="rgba(0,0,0,0.35)";
@@ -758,13 +762,13 @@ mouse.set(((e.clientX-rc.left)/rc.width)*2-1,-((e.clientY-rc.top)/rc.height)*2+1
 ray.setFromCamera(mouse,camera);
 return ray.intersectObject(shell)[0]||null;
 }
-var coreCol=new THREE.Color(0x1c1c1c),coreOp=0.10;
+var coreCol=new THREE.Color(DARK?0xffffff:0x1c1c1c),coreOp=0.10;
 function setHover(h){
 var i=h?h.face.materialIndex:-1;
 if(i!==hover){
 if(hover>=0)fxs[hover].set(false);
 if(i>=0){coreCol.set(PAL[i].fill);coreOp=0.18;}
-else{coreCol.set(0x1c1c1c);coreOp=0.10;}
+else{coreCol.set(DARK?0xffffff:0x1c1c1c);coreOp=0.10;}
 for(var k=0;k<fxs.length;k++)fxs[k].setBack(true);
 hover=i;
 }
@@ -844,6 +848,7 @@ requestAnimationFrame(follow);
 var clock=new THREE.Clock(),lastT=0;
 
 function tick(){
+if(PAUSED){requestAnimationFrame(tick);return;}
 var t=clock.getElapsedTime();
 var dt=Math.min(0.05,t-lastT);lastT=t;
 

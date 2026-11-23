@@ -22,6 +22,7 @@
         <a href="wall.html"${page === 'wall' ? ' aria-current="page"' : ''}>Illustration Wall</a>
         <a href="${RESUME}" target="_blank" rel="noopener">View Resume</a>
       </nav>
+      <button type="button" class="theme-switch" role="switch" aria-checked="false" aria-label="Dark mode"><span class="ts-track" aria-hidden="true"><span class="ts-knob"></span></span></button>
     </header>`);
   document.body.insertAdjacentHTML('beforeend', `
     <footer class="site-foot">
@@ -29,6 +30,42 @@
       <p>Harshal Tholambia © 2026</p>
       <p><a href="mailto:${EMAIL}">✉️ ${EMAIL}</a></p>
     </footer>`);
+
+  // dark mode for the whole site: data-theme on <html> (set before the first paint in each page's head). The switch in the top bar
+  // also works the lamp on the cutting mat; the choice is saved as "lamp"; the About and Skills frames redraw to match
+  {
+    const root = document.documentElement, btn = document.querySelector('.theme-switch');
+    // the About and Skills frames: each is loaded twice, a light copy and a dark one (the mode is in its address, so it works
+    // however the page was opened), stacked in one place. Switching shows the other copy at once and pauses the hidden one
+    const stacks = [...document.querySelectorAll('.gs-embed[data-src]')].map((f) => {
+      const box = document.createElement('div'); box.className = 'embed-stack'; f.before(box);
+      return ['light', 'dark'].map((t) => {
+        const c = t === 'light' ? f : f.cloneNode(false);
+        c.dataset.theme = t; c.src = `${f.dataset.src}?theme=${t}`;
+        c.addEventListener('load', () => c.contentWindow.postMessage(c.classList.contains('on') ? 'play' : 'pause', '*'));
+        box.append(c); return c;
+      });
+    });
+    const frames = () => stacks.flat().forEach((c) => {
+      const on = c.dataset.theme === root.dataset.theme;
+      c.classList.toggle('on', on); c.tabIndex = on ? 0 : -1;
+      c.contentWindow?.postMessage(on ? 'play' : 'pause', '*');
+    });
+    const show = () => { const d = root.dataset.theme === 'dark'; btn.setAttribute('aria-checked', String(d)); btn.title = d ? 'Dark mode on' : 'Dark mode off'; };
+    window.setTheme = (dark) => {
+      const t = dark ? 'dark' : 'light';
+      if (root.dataset.theme === t) return show();
+      root.dataset.theme = t; show(); frames();
+    };
+    btn.addEventListener('click', () => {
+      if (window.toggleLamp) return toggleLamp(); // on the Welcome page the lamp on the mat answers too, with its flicker
+      const dark = root.dataset.theme !== 'dark';
+      try { localStorage.setItem('lamp', dark ? 'on' : 'off'); } catch {}
+      setTheme(dark);
+    });
+    addEventListener('storage', (e) => { if (e.key === 'lamp' && e.newValue && !window.toggleLamp) setTheme(e.newValue === 'on'); });
+    show(); frames();
+  }
 
   // a picture: images/<slug>/<nn>.webp (or <name>.webp), with a small loading circle until it has arrived
   const loaded = (img) => img.parentNode.classList.remove('loading');
@@ -158,7 +195,7 @@
     const item = (it, share) => {
       const o = typeof it === 'number' ? { img: it } : it;
       const w = o.w ? `${(o.w / 1154) * 100}%` : share;
-      if (o.embed) return `<iframe class="item embed" src="${html(o.embed)}" style="--w:${w};aspect-ratio:${o.w || 1154} / ${o.h || ((o.w || 1154) * 9) / 16}" title="${html(p.tile)}" loading="lazy" allowfullscreen></iframe>`;
+      if (o.embed) return `<iframe class="item embed" src="${html(o.embed)}" style="--w:${w};aspect-ratio:${o.w || 1154} / ${o.h || ((o.w || 1154) * 9) / 16}" title="${html(p.tile)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`; // YouTube refuses to play (Error 153) without the page's address, which this policy sends
       return `<div class="item" style="--w:${w}">${pic(p.slug, o.img, `${p.tile}, picture ${o.img}`)}</div>`;
     };
     const ext = (u) => `<a href="${html(u.href)}" target="_blank" rel="noopener">${html(u.text)}</a>`;

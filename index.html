@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script>/* light or dark before the first paint: the visitor's last choice on the switch (saved as "lamp"), else their device */
+try { var lamp = localStorage.getItem('lamp'); } catch (e) {}
+document.documentElement.dataset.theme = (lamp ? lamp === 'on' : matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Harshal Tholambia — Visual Development and Background Design</title>
@@ -71,13 +75,12 @@ addEventListener('pagereveal', async (e) => {
     <div class="photo sharpener" aria-hidden="true"><img class="day" src="images/sharpener-day.webp" alt=""><img class="night" src="images/sharpener-night.webp" alt=""></div>
     <div class="photo pens" aria-hidden="true"><img class="day" src="images/pens-day.webp" alt=""><img class="night" src="images/pens-night.webp" alt=""></div>
     <i class="light" aria-hidden="true"></i>
-    <button class="lights" type="button" role="switch" aria-checked="false"><span class="track" aria-hidden="true"><span class="knob"></span></span><span class="txt">Dark mode off</span></button>
   </header>
 
   <p class="mat-caption">the table where the magic happens</p>
-  <iframe class="gs-embed about" src="embeds/about.html" title="About Harshal Tholambia" loading="lazy"></iframe>
+  <iframe class="gs-embed about" data-src="embeds/about.html" title="About Harshal Tholambia" loading="lazy"></iframe>
   <p class="cta"><a class="gs-btn" href="portfolio.html">View Projects</a></p>
-  <iframe class="gs-embed skills" src="embeds/skills.html" title="Core skills and core toolkit" loading="lazy"></iframe>
+  <iframe class="gs-embed skills" data-src="embeds/skills.html" title="Core skills and core toolkit" loading="lazy"></iframe>
 </div></main>
 
 
