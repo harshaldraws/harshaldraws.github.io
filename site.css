@@ -1,7 +1,7 @@
 /* The Google Site's layout: a light header with the links on the right, pages 1154 wide, Roboto throughout.
    The Welcome page is black around the cutting mat, the other pages light grey. */
 body.gs{margin:0;padding:0;overflow-x:clip;background:#f2f2f2;color:#1c1c1c;font:400 16px/1.5 Roboto,system-ui,sans-serif}
-body.gs[data-page=welcome]{background:#000}
+body.gs[data-page=welcome]{background:#fff}
 .gs .wrap{width:min(1154px,100% - 2 * clamp(16px,4vw,40px));margin-inline:auto}
 
 .site-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:20px;
@@ -15,14 +15,12 @@ body.gs[data-page=welcome]{background:#000}
 /* Welcome: the cutting mat, About, the View Projects button, Core Skills & Toolkit */
 .welcome-main{padding:clamp(40px,6vw,100px) 0 40px}
 .welcome-main .hero{min-height:0;max-height:none}
-.gs-embed{display:block;width:100%;border:0;margin-top:clamp(24px,3vw,49px);background:#000}
+.gs-embed{display:block;width:100%;border:0;margin-top:clamp(24px,3vw,49px);background:transparent}
 .gs-embed.about{aspect-ratio:1154/392}
 .gs-embed.skills{aspect-ratio:1154/418}
 .cta{margin:clamp(24px,3vw,40px) 0 0;text-align:center}
 .gs-btn{box-sizing:border-box;display:inline-block;padding:10px 26px;border:1px solid currentColor;border-radius:4px;color:inherit;text-decoration:none;font-weight:500;transition:background .2s,color .2s}
 .gs-btn:hover{background:#1c1c1c;color:#f2f2f2}
-[data-page=welcome] .cta .gs-btn{color:#f2f2f2}
-[data-page=welcome] .cta .gs-btn:hover{background:#f2f2f2;color:#000}
 
 /* Portfolio: two tiles a row, the name centred under each */
 .portfolio-main{padding:24px 0 80px}
