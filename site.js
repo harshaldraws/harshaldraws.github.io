@@ -2,7 +2,7 @@
 // the Portfolio grid (portfolio.html) and a project page (project.html?p=<slug>). What goes in them is PROJECTS in content.js.
 {
   const RESUME = 'https://drive.google.com/file/d/1mZcOKCzq3N4GQ8IayMUodFR_9-F1n4WE/view?usp=sharing';
-  const EMAIL = 'harshal.tholambia@nift.ac.in';
+  const EMAIL = 'harshaldraws.work@gmail.com';
   const SOCIAL = [
     ['Behance', 'https://www.behance.net/harshaldraws', '<path d="M9.6 11.4c.9-.4 1.4-1.1 1.4-2.1C11 7.3 9.5 6.5 7.7 6.5H3v11h4.9c1.9 0 3.6-.9 3.6-3 0-1.3-.7-2.4-1.9-2.7Zm-4.4-3h2.1c.8 0 1.5.2 1.5 1.1 0 .8-.6 1.1-1.3 1.1H5.2V8.4Zm2.3 7.2H5.2v-2.9h2.4c1 0 1.6.4 1.6 1.5 0 1-.8 1.4-1.7 1.4ZM14.4 7.3h5.2v1.3h-5.2zM17 9.6c-2.3 0-3.9 1.7-3.9 4s1.5 4 3.9 4c1.8 0 3-.8 3.6-2.6h-1.9c-.2.6-1 .9-1.6.9-1.2 0-1.8-.6-1.8-1.8H21c.2-2.4-1.1-4.5-4-4.5Zm-1.7 3.2c.1-1 .7-1.6 1.7-1.6s1.5.6 1.6 1.6h-3.3Z"/>'],
     ['Instagram', 'https://www.instagram.com/harshaldraws/', '<path d="M12 7.3a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4Zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm4.9-8.9a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2ZM12 3.5c-2.3 0-2.6 0-3.5.1-3.2.1-4.8 1.7-4.9 4.9 0 .9-.1 1.2-.1 3.5s0 2.6.1 3.5c.1 3.2 1.7 4.8 4.9 4.9.9 0 1.2.1 3.5.1s2.6 0 3.5-.1c3.2-.1 4.8-1.7 4.9-4.9 0-.9.1-1.2.1-3.5s0-2.6-.1-3.5c-.1-3.2-1.7-4.8-4.9-4.9-.9-.1-1.2-.1-3.5-.1Zm0 1.5c2.3 0 2.5 0 3.4.1 2.3.1 3.4 1.2 3.5 3.5 0 .9.1 1.1.1 3.4s0 2.5-.1 3.4c-.1 2.3-1.2 3.4-3.5 3.5-.9 0-1.1.1-3.4.1s-2.5 0-3.4-.1c-2.3-.1-3.4-1.2-3.5-3.5 0-.9-.1-1.1-.1-3.4s0-2.5.1-3.4C5.2 6.2 6.3 5.1 8.6 5c.9 0 1.1-.1 3.4-.1Z"/>'],
