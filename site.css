@@ -6,7 +6,8 @@ body.gs[data-page=welcome]{background:#fff}
 
 .site-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:14px clamp(16px,3vw,40px);background:#f2f2f2;box-shadow:0 1px 0 rgba(0,0,0,.06)}
-.site-home{font-size:22px;line-height:1;text-decoration:none}
+.site-home{font-size:18px;font-weight:700;line-height:1;color:#1c1c1c;text-decoration:none;white-space:nowrap}
+.site-home:hover{text-decoration:underline;text-underline-offset:4px}
 .site-nav{display:flex;gap:clamp(14px,2.2vw,28px);margin-left:auto}
 .site-nav a{color:#1c1c1c;text-decoration:none;white-space:nowrap}
 .site-nav a[aria-current]{font-weight:700}
@@ -58,7 +59,7 @@ body.gs[data-page=welcome]{background:#fff}
   .site-head{padding:12px 12px;gap:10px}
   .site-nav{gap:11px;font-size:13.5px}
 }
-/* phones: the home icon and the dark mode switch on one row, the links in a row of their own under them */
+/* phones: the name and the dark mode switch on one row, the links in a row of their own under them */
 @media (max-width:600px){
   .site-head{flex-wrap:wrap;row-gap:8px;padding:10px 14px}
   .site-nav{order:3;width:100%;margin-left:0;justify-content:space-between;gap:8px;font-size:14px}
@@ -239,7 +240,7 @@ html[data-theme=dark] body.gs[data-page=welcome]{background:#000}
 html[data-theme=dark] body.gs[data-page=project]{background:#121212}
 html[data-theme=dark] .site-head{background:#1b1b1b;box-shadow:0 1px 0 rgba(255,255,255,.06)}
 html[data-theme=dark] .site-head.scrolled{background:rgba(27,27,27,.62);box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 8px 30px rgba(0,0,0,.5)}
-html[data-theme=dark] .site-nav a{color:#ececec}
+html[data-theme=dark] .site-nav a,html[data-theme=dark] .site-home{color:#ececec}
 html[data-theme=dark] .site-foot{background:#1b1b1b;color:#ececec}
 html[data-theme=dark] .site-foot .social a{background:#ececec}
 html[data-theme=dark] .site-foot svg{fill:#1b1b1b}

@@ -15,9 +15,8 @@
 
   document.querySelector('.skip').insertAdjacentHTML('afterend', `
     <header class="site-head">
-      <a class="site-home" href="./" aria-label="Home">🏠</a>
+      <a class="site-home" href="./"${page === 'welcome' ? ' aria-current="page"' : ''}>Harshal Tholambia</a>
       <nav class="site-nav" aria-label="Main">
-        <a href="./"${page === 'welcome' ? ' aria-current="page"' : ''}>Welcome!</a>
         <a href="portfolio.html"${page === 'portfolio' || page === 'project' ? ' aria-current="page"' : ''}>Portfolio</a>
         <a href="wall.html"${page === 'wall' ? ' aria-current="page"' : ''}>Illustration Wall</a>
         <a href="${RESUME}" target="_blank" rel="noopener">View Resume</a>

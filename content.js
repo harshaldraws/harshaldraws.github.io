@@ -21,6 +21,7 @@ const WALL = [
   { slug: 'sketchbook', pics: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
   { slug: 'tano-children-book', pics: [2, 3, 4, 5, 6, 7, 8] },
   { slug: 'bakery-branding', pics: ['stickers'] },
+  { slug: 'phalap', pics: ['wall-01', 'wall-02', 'wall-03', 'wall-04', 'wall-05', 'wall-06', 'wall-07', 'wall-08', 'wall-09', 'wall-10'] },
 ];
 
 // The project pages, section by section, as on the Google Site.
@@ -123,7 +124,7 @@ const PROJECTS = [
       ] },
     { case: 'terracotta' }, // the brand identity sections: cases/terracotta.css + .js
   ] },
-  { slug: 'cafe-culture-documentary', tile: 'Tranquil - Cafe Culture Documentary', next: 'bamboo-basketry', software: [], parts: [
+  { slug: 'cafe-culture-documentary', tile: 'Tranquil - Cafe Culture Documentary', next: 'spark', software: [], parts: [
     { hero: 'hero.webp', h: 430 },
     { title: 'CAFE CULTURE DOCUMENTARY', bg: 'black' },
     { details: { 'Project Type': 'Documentary • Visual Research', Client: 'Academic Project', Duration: '2 weeks (Nov 2025)' },
@@ -132,6 +133,16 @@ const PROJECTS = [
     { row: [1], bg: 'black' }, { row: [2], bg: 'black' }, { row: [3], bg: 'black' }, { row: [4], bg: 'black' },
     { row: [{ img: 5, w: 760 }], bg: 'black' },
     { note: ['THANKS FOR VIEWING!'], bg: 'black' },
+  ] },
+  { slug: 'spark', tile: 'Spark (Stop Motion Film)', next: 'bamboo-basketry', software: [], parts: [
+    { title: 'SPARK', sub: '( Stop Motion Film )', bg: 'black' },
+    { details: { 'Project Type': 'Stop Motion', 'Project Duration': '1 week' },
+      heading: 'What is Spark?',
+      about: ['Spark is a stop motion short film, 20 seconds long, about the creative spark that builds up slowly. The lost motivation that finds its way back, the spark we all need.',
+        'It is personal too. I made this film to bring my own spark back, and somewhere in making it, it came back.',
+        'The fire you hear at the end is just me crushing tape in my hands.'] },
+    { row: [{ embed: 'https://drive.google.com/file/d/1D2CQMho_dG6yd0NUlbH-Iphl8SX5j-KK/preview', w: 957, h: 538 }], bg: 'clay' },
+    { note: ['THANKS FOR VIEWING!'], bg: 'clay' },
   ] },
   { slug: 'bamboo-basketry', hidden: true, tile: 'Bamboo Basketry', next: 'background-paintings', software: [], parts: [
     { hero: 'hero.mp4', h: 340 },
