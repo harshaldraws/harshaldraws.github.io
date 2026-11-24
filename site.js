@@ -325,6 +325,26 @@
       document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="cases/${designed.case}.css">`);
       const s = document.createElement('script'); s.src = `cases/${designed.case}.js`; document.body.append(s);
     }
+    // the opening picture: short enough that the project's title under it shows on the first screen, so visitors
+    // know to scroll; it blurs as the page scrolls past it
+    const hero = host.querySelector('.band.hero > .hero-pic');
+    if (hero) {
+      const title = hero.parentElement.nextElementSibling;
+      const fit = () => {
+        const last = title.querySelector('.proj-sub') || title.querySelector('.proj-title');
+        const below = last.getBoundingClientRect().bottom - title.getBoundingClientRect().top + 28; // the title band down to its last line, and some air
+        const cs = getComputedStyle(hero), around = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom); // a framed film sits with room around it
+        hero.style.setProperty('--fit', `${Math.max(180, innerHeight - document.querySelector('.site-head').offsetHeight - below - around)}px`);
+      };
+      const blur = () => {
+        const b = Math.min(1, scrollY / hero.offsetHeight) * 12;
+        hero.style.filter = b ? `blur(${b.toFixed(1)}px)` : '';
+        if (!hero.classList.contains('framed')) hero.style.transform = b ? `scale(${1 + b / 200})` : '';  // hides the soft edges the blur leaves
+      };
+      fit(); blur();
+      addEventListener('resize', fit);
+      addEventListener('scroll', () => requestAnimationFrame(blur), { passive: true });
+    }
     // the storyboard wall: the panels grouped into sheets read like a storyboard page, left to right then down (3 x 2,
     // or 1 on a phone); the sheets sit side by side and the arrows slide one sheet at a time
     host.querySelectorAll('.boards').forEach((box) => {
