@@ -44,14 +44,46 @@ const WALL = [
 //   { columns: [[1, 2], [3, 4]] }             two columns of pictures, each listed top to bottom
 //   { drift: [1, 2, 3] }                      one row of pictures that visitors drag sideways
 //   { case: 'terracotta' }                    a designed section, full width: cases/terracotta.css and .js fill it
+//   { boards: ['Shot 1', ...] }               a storyboard wall: the pictures in images/<slug>/boards/ (01, 02 ...), two rows
+//                                             deep, sliding sideways with arrows; each label goes under its panel
+//   { process: 2, slides: 5 }                 a finished picture with a Show process button under it; it opens a carousel of the
+//                                             steps that made it. Pictures in images/<slug>/2/ : cover.webp, then 01 ... 05
 // "software" lists the programs used, shown as small logos with the details (names as in images/software/<name>.svg).
 // "next" is the Next project button at the bottom of the page; Back always returns to the Portfolio page.
 // hidden: true keeps a page off the Portfolio grid; it's still reached by Back and Next.
 const PROJECTS = [
-  { slug: 'background-paintings', tile: 'Background & Paintings', next: 'sketchbook', parts: [
+  { slug: 'background-paintings', tile: 'Background & Paintings', next: 'phalap', parts: [
     { title: 'Background & Paintings' },
     { row: [1] }, { row: [2] }, { row: [3] }, { row: [4] }, { row: [5] }, { row: [6] }, { row: [7] }, { row: [8] },
     { row: [{ img: 9, w: 562 }] }, { row: [10, 11] },
+  ] },
+  { slug: 'phalap', tile: 'Phalap (Visual Development)', next: 'sketchbook', parts: [
+    { hero: 'hero.webp', h: 695 },
+    { title: 'PHALAP - THE MAGIC LEAVES', sub: '( Visual Development )', bg: 'black' },
+    { details: {
+        'Project Type': 'Visual Development & Background Design',
+        Client: [
+          { name: 'Department of Indigenous Affairs, Government of Arunachal Pradesh', src: 'dia.png', href: 'https://arunachalpradesh.gov.in/' },
+          { name: 'Billion Readers', src: 'billion.png', href: 'https://billionreaders.org/' },
+        ],
+        'Target Audience': 'Children in government schools across Arunachal Pradesh',
+        Studio: [{ name: 'Studio Zeng (internship)', src: 'zeng-black.png', dark: 'zeng-white.png' }],
+        'Project Duration': '4 weeks',
+      },
+      heading: 'What is Phalap?',
+      about: [
+        'Phalap - The Magic Leaves is a Singpho folktale, retold by Manje La. It follows two brothers, Lep Gam and Lep Nong, who live at the edge of a jungle and rely on it for everything they eat.',
+        'One day their hunt turns up nothing. Tired and hungry, they come across a plant whose leaves bring their strength back. They carry it home, grow it, and name it Phalap. That plant is the smoked tea the Singpho still make today, so the folktale is also the story of where their tea comes from.',
+        "The film is part of an e-learning platform made by Arunachal Pradesh's Department of Indigenous Affairs together with Billion Readers, bringing the state's own stories to children in its government schools. I spent four weeks on it as an intern at Studio Zeng, painting the backgrounds from animatic and layout through to the final render.",
+      ] },
+    { heading: 'Animatic Backgrounds' },
+    { caption: 'The rough backgrounds I painted for the animatic, shot by shot.' },
+    { boards: ['Shots 2.1, 2.2', 'Shot 2.3', 'Shot 2.4', 'Shots 2.5, 4.1', 'Shot 3.1', 'Shot 4.0a', 'Shot 4.0b', 'Shot 4.0c', 'Shot 4.0d', 'Shot 4.1', 'Shot 4.1a', 'Shot 4.1b', 'Shot 4.2', 'Shot 4.3', 'Shot 4.4', 'Shot 4.5', 'Shot 5', 'Shots 5.2, 5.3', 'Shots 5.4, 6, 6.1, 7, 9', 'Shot 8', 'Shots 8.1, 8.2, 8.3', 'Shot 9', 'Shot 9.1', 'Shots 11, 11.1', 'Shot 11.2', 'Shot 11.2, with figures', 'Shot 12', 'Shot 12.1', 'Shot 12.2', 'Shot 12.3', 'Shot 12.3a', 'Shot 12.4', 'Shot 12.5', 'Shot 13.1', 'Shots 13.2, 13.3, 14.1', 'Shot 13.4', 'Shot 14.1', 'Shot 15', 'Shot 15a', 'Shot 15.1', 'Credits'] },
+    { heading: 'From Rough to Final Render' },
+    { process: 2, slides: 5 },
+    { process: 3, slides: 4 },
+    { process: 4, slides: 5 },
+    { process: 5, slides: 5 },
   ] },
   { slug: 'sketchbook', tile: 'Sketchbook', parts: [
     { title: 'Sketchbook' },

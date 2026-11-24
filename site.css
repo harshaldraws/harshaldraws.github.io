@@ -183,6 +183,17 @@ body.gs[data-page=project]{background:#fff}
 .details dl{margin:0}
 .details dt{font-weight:600;color:#1c1c1c}
 .details dd{margin:0 0 14px}
+/* logos in the details: client and studio marks, at one height; a studio mark can swap for a dark mode version */
+.details .logos{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:6px 0 4px}
+.details .logos img{display:block;height:58px;width:auto}
+.details .logos img.on-dark{display:none}
+.details .logos img[src*="zeng"]{height:34px} /* a wide wordmark: shorter, to weigh the same as the round marks */
+.details .logos a{display:block}
+.details .logo-names{display:block;font-size:14px;color:#555}
+html[data-theme=dark] .details .logos img.on-light{display:none}
+html[data-theme=dark] .details .logos img.on-dark{display:block}
+html[data-theme=dark] .details .logos img[src*="dia"],html[data-theme=dark] .details .logos img[src*="billion"]{border-radius:6px} /* white-backed marks read as small cards */
+html[data-theme=dark] .details .logo-names{color:#aaa}
 .details .d-link{margin:0}
 .details .about h2{margin:0 0 10px;font:700 19px/1.3 Inter,sans-serif}
 .details .about p{margin:0 0 14px}
@@ -250,3 +261,52 @@ html[data-theme=dark] .drift-track img{box-shadow:0 2px 3px rgba(0,0,0,.4),0 12p
 /* the envelope before the email address: drawn in the footer's own text colour, so it shows in both modes */
 .site-foot .foot-mail{display:inline-flex;align-items:center;gap:7px}
 .site-foot p .foot-mail svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+
+/* a process carousel on a project page (site.js): the finished picture, a Show process button under it, and once open,
+   the steps sliding left and right with round arrows at the sides */
+.process{margin:8px auto 64px;width:min(100%,calc((100vh - 210px) * 2308 / 1431))} /* short enough that the whole picture and its button fit on screen */
+.proc-view{position:relative;overflow:hidden;aspect-ratio:2308/1431;border-radius:6px;background:#e9e9e9;touch-action:pan-y}
+.proc-track{display:flex;height:100%;transition:translate .6s cubic-bezier(.3,.7,.2,1)}
+.proc-slide{flex:0 0 100%;margin:0}
+.proc-slide .pic{display:block;width:100%;height:100%}
+.proc-slide img{display:block;width:100%;height:100%;object-fit:cover}
+.proc-arrow{position:absolute;top:50%;width:46px;height:46px;margin-top:-23px;border:0;border-radius:50%;background:rgba(255,255,255,.92);
+  box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,scale .2s}
+.proc-arrow::before{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;border:solid #1c1c1c;border-width:2.5px 2.5px 0 0;translate:-65% -50%;rotate:45deg}
+.proc-arrow.prev{left:16px}.proc-arrow.prev::before{translate:-35% -50%;rotate:-135deg}
+.proc-arrow.next{right:16px}
+.process.open .proc-arrow{opacity:1;pointer-events:auto}
+.process.open .proc-arrow:disabled{opacity:.35;cursor:default}
+.proc-arrow:hover:not(:disabled){scale:1.08}
+.proc-arrow:focus-visible{outline:3px solid #4084a6;outline-offset:2px}
+.proc-count{display:block;margin:0 0 14px;color:#666;font:500 14px/1.2 Inter,Roboto,sans-serif}
+html[data-theme=dark] .proc-count{color:#aaa}
+.proc-open{margin:22px 0 0;text-align:center}
+.proc-toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font:inherit;font-weight:500;background:none}
+.proc-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:rotate .3s}
+.process.open .proc-toggle svg{rotate:180deg}
+@media (max-width:600px){.proc-arrow{width:38px;height:38px;margin-top:-19px}.proc-arrow.prev{left:8px}.proc-arrow.next{right:8px}}
+@media (prefers-reduced-motion:reduce){.proc-track{transition:none}}
+html[data-theme=dark] .proc-view{background:#222}
+
+/* the storyboard wall (site.js): panels in two rows that run sideways, three columns to a screen (one on a phone),
+   each a framed drawing with its number and shot under it; it snaps a column at a time */
+.boards{margin:18px 0 64px}
+.boards-wall{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.board-sheet{flex:0 0 100%;box-sizing:border-box;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-content:start;gap:26px 22px;padding:4px 2px;scroll-snap-align:start}
+.boards-wall::-webkit-scrollbar{display:none}
+.board{margin:0}
+.board-frame{display:block;aspect-ratio:16/10;padding:10px;background:#f3f3f3;border:1.5px solid #1c1c1c}
+.board-frame .pic{display:block;width:100%;height:100%}
+.board-frame img{display:block;width:100%;height:100%;object-fit:contain}
+.board figcaption{display:flex;gap:10px;align-items:baseline;margin-top:9px;font:400 14px/1.3 Inter,Roboto,sans-serif;color:#444}
+.board figcaption b{font-weight:700;color:#1c1c1c;font-variant-numeric:tabular-nums}
+.boards-nav{display:flex;justify-content:center;align-items:center;gap:22px;margin:26px 0 0}
+.boards-nav .proc-arrow{position:relative;top:auto;margin:0;opacity:1;pointer-events:auto;box-shadow:0 0 0 1.5px #1c1c1c}
+.boards-nav .proc-arrow:disabled{opacity:.3;cursor:default}
+.boards-count{min-width:7.5em;text-align:center;font:500 14px/1.2 Inter,Roboto,sans-serif;color:#555;font-variant-numeric:tabular-nums}
+@media (max-width:700px){.board-sheet{grid-template-columns:1fr}}
+html[data-theme=dark] .board-frame{background:#1d1d1d;border-color:#bbb}
+html[data-theme=dark] .board figcaption{color:#aaa}html[data-theme=dark] .board figcaption b{color:#eee}
+html[data-theme=dark] .boards-count{color:#aaa}
+html[data-theme=dark] .boards-nav .proc-arrow{box-shadow:0 0 0 1.5px #bbb}

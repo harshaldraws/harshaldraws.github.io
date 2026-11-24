@@ -257,6 +257,12 @@
       if (o.embed) return `<iframe class="item embed" src="${html(o.embed)}" style="--w:${w};aspect-ratio:${o.w || 1154} / ${o.h || ((o.w || 1154) * 9) / 16}" title="${html(p.tile)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`; // YouTube refuses to play (Error 153) without the page's address, which this policy sends
       return `<div class="item" style="--w:${w}">${pic(p.slug, o.img, `${p.tile}, picture ${o.img}`)}</div>`;
     };
+    // a fact in the details: text, or a list of logos (each with its name, a link, and a second picture for dark mode)
+    const fact = (v) => typeof v === 'string' ? html(v) : `<span class="logos">${v.map((l) => {
+      const img = (src, cls) => `<img class="${cls}" src="images/logos/${src}" alt="${html(l.name)}" title="${html(l.name)}">`;
+      const pics = l.dark ? img(l.src, 'on-light') + img(l.dark, 'on-dark') : img(l.src, '');
+      return l.href ? `<a href="${html(l.href)}" target="_blank" rel="noopener">${pics}</a>` : pics;
+    }).join('')}</span><span class="logo-names">${v.map((l) => html(l.name)).join(' and ')}</span>`;
     const ext = (u) => `<a href="${html(u.href)}" target="_blank" rel="noopener">${html(u.text)}</a>`;
     // one part of the page (see PROJECTS in content.js)
     const part = (t) => {
@@ -265,7 +271,7 @@
         : `<img class="hero-pic" style="--h:${t.h}px" src="images/${p.slug}/${t.hero}" alt="">`;
       if (t.title) return `<h1 class="proj-title">${html(t.title)}</h1>${t.sub ? `<p class="proj-sub">${html(t.sub)}</p>` : ''}`;
       if (t.details) return `<div class="details">
-          <div class="facts"><dl>${Object.entries(t.details).map(([k, v]) => `<dt>${html(k)}:</dt><dd>${html(v)}</dd>`).join('')}
+          <div class="facts"><dl>${Object.entries(t.details).map(([k, v]) => `<dt>${html(k)}:</dt><dd>${fact(v)}</dd>`).join('')}
           ${p.software && p.software.length ? `<dt>Software:</dt><dd class="software">${p.software.map((n) => `<img src="images/software/${n}.svg" alt="${html(n)}" title="${html(n)}">`).join('')}</dd>` : ''}</dl>
           ${t.link ? `<p class="d-link">${ext(t.link)}</p>` : ''}</div>
           <div class="about">${t.heading ? `<h2>${html(t.heading)}</h2>` : ''}${t.about.map((x) => `<p>${html(x)}</p>`).join('')}</div>
@@ -278,6 +284,29 @@
       if (t.feature) return `<div class="p-feature${t.center ? ' center' : ''}"><h2>${html(t.feature)}</h2>${t.text ? `<p>${html(t.text)}</p>` : ''}</div>`;
       if (t.columns) return `<div class="cols">${t.columns.map((col) => `<div class="col">${col.map((n) => pic(p.slug, n, `${p.tile}, picture ${n}`)).join('')}</div>`).join('')}</div>`;
       if (t.case) return '<div id="tc-host"></div>';
+      if (t.boards) return `<div class="boards" aria-label="${html(p.tile)}: storyboard backgrounds">
+          <div class="boards-wall" tabindex="0">${t.boards.map((lab, i) => `<figure class="board">
+            <span class="board-frame">${pic(`${p.slug}/boards`, i + 1, `${p.tile}, ${lab}`)}</span>
+            <figcaption><b>${String(i + 1).padStart(2, '0')}</b> ${html(lab)}</figcaption></figure>`).join('')}</div>
+          <p class="boards-nav"><button type="button" class="proc-arrow prev" aria-label="Previous panels"></button>
+            <span class="boards-count" aria-live="polite"></span>
+            <button type="button" class="proc-arrow next" aria-label="Next panels"></button></p>
+        </div>`;
+      if (t.process) {
+        const dir = `${p.slug}/${t.process}`, steps = Array.from({ length: t.slides }, (_, i) => i + 1);
+        return `<div class="process" aria-label="${html(p.tile)}: a finished background and the steps that made it">
+          <div class="proc-view">
+            <div class="proc-track">
+              <figure class="proc-slide">${pic(dir, 'cover', `${p.tile}, the finished background`)}</figure>
+              ${steps.map((n) => `<figure class="proc-slide">${pic(dir, n, `${p.tile}, process step ${n}`)}</figure>`).join('')}
+            </div>
+            <button type="button" class="proc-arrow prev" aria-label="Previous step"></button>
+            <button type="button" class="proc-arrow next" aria-label="Next step"></button>
+          </div>
+          <p class="proc-open"><span class="proc-count" aria-live="polite"></span><button type="button" class="gs-btn proc-toggle" aria-expanded="false"><span>Show process</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button></p>
+        </div>`;
+      }
       if (t.drift) return `<div class="drift" tabindex="0" aria-label="${html(p.tile)}: drag sideways, or use the arrow keys"><div class="drift-track">${t.drift.map((n) => pic(p.slug, n, `${p.tile}, page ${n}`)).join('')}</div></div>`;
       throw new Error(`Unknown part in ${p.slug}: ${JSON.stringify(t)}`);
     };
@@ -297,6 +326,79 @@
       document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="cases/${designed.case}.css">`);
       const s = document.createElement('script'); s.src = `cases/${designed.case}.js`; document.body.append(s);
     }
+    // the storyboard wall: the panels grouped into sheets read like a storyboard page, left to right then down (3 x 2,
+    // or 1 on a phone); the sheets sit side by side and the arrows slide one sheet at a time
+    host.querySelectorAll('.boards').forEach((box) => {
+      const wall = box.querySelector('.boards-wall'), panels = [...wall.children];
+      const prev = box.querySelector('.prev'), next = box.querySelector('.next'), count = box.querySelector('.boards-count');
+      const phone = matchMedia('(max-width: 700px)');
+      let per = 0, at = 0;
+      const show = () => {
+        const sheets = Math.ceil(panels.length / per);
+        at = Math.max(0, Math.min(sheets - 1, at));
+        wall.scrollTo({ left: at * wall.clientWidth, behavior: 'smooth' });
+        count.textContent = per === 1 ? `${at + 1} of ${panels.length}` : `${at * per + 1}–${Math.min(panels.length, (at + 1) * per)} of ${panels.length}`;
+        prev.disabled = at === 0; next.disabled = at === sheets - 1;
+      };
+      const pack = () => {
+        const n = phone.matches ? 1 : 6;
+        if (n === per) return;
+        const first = at * per; per = n; at = Math.floor(first / per);
+        wall.replaceChildren(...Array.from({ length: Math.ceil(panels.length / per) }, (_, k) => {
+          const sheet = document.createElement('div'); sheet.className = 'board-sheet';
+          sheet.append(...panels.slice(k * per, (k + 1) * per)); return sheet;
+        }));
+        show();
+      };
+      prev.addEventListener('click', () => { at--; show(); });
+      next.addEventListener('click', () => { at++; show(); });
+      wall.addEventListener('keydown', (e) => { const k = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (k) { e.preventDefault(); at += k; show(); } });
+      wall.addEventListener('scroll', () => { // a swipe moves it too: follow whichever sheet it settles on
+        clearTimeout(wall._t); wall._t = setTimeout(() => { const k = Math.round(wall.scrollLeft / wall.clientWidth); if (k !== at) { at = k; show(); } }, 120);
+      }, { passive: true });
+      phone.addEventListener('change', pack);
+      addEventListener('resize', () => wall.scrollTo({ left: at * wall.clientWidth }));
+      pack();
+    });
+
+    // a process carousel: the finished picture first; Show process opens the steps, which slide left and right with the
+    // arrows, the arrow keys or a swipe. Slide 0 is the finished picture, 1 onwards the steps
+    host.querySelectorAll('.process').forEach((box) => {
+      const track = box.querySelector('.proc-track'), slides = [...track.children], last = slides.length - 1;
+      const prev = box.querySelector('.prev'), next = box.querySelector('.next'), count = box.querySelector('.proc-count');
+      const toggle = box.querySelector('.proc-toggle');
+      let at = 0;
+      const show = (i) => {
+        at = Math.max(0, Math.min(last, i));
+        track.style.translate = `${-at * 100}% 0`;
+        slides.forEach((s, k) => { s.inert = k !== at; });
+        prev.disabled = at === 0; next.disabled = at === last;
+        count.textContent = at === 0 ? 'Finished background' : `Step ${at} of ${last}`;
+      };
+      const open = (o) => {
+        box.classList.toggle('open', o); toggle.setAttribute('aria-expanded', String(o));
+        toggle.firstElementChild.textContent = o ? 'Hide process' : 'Show process';
+        show(o ? 1 : 0);
+      };
+      toggle.addEventListener('click', () => open(!box.classList.contains('open')));
+      prev.addEventListener('click', () => show(at - 1));
+      next.addEventListener('click', () => show(at + 1));
+      box.addEventListener('keydown', (e) => {
+        const k = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+        if (k && box.classList.contains('open')) { e.preventDefault(); show(at + k); }
+      });
+      let from = null; // a sideways swipe on the picture steps too
+      const view = box.querySelector('.proc-view');
+      view.addEventListener('pointerdown', (e) => { if (e.target.closest('button')) return; from = e.clientX; });
+      view.addEventListener('pointerup', (e) => {
+        if (from === null || !box.classList.contains('open')) { from = null; return; }
+        const dx = e.clientX - from; from = null;
+        if (Math.abs(dx) > 40) show(at + (dx < 0 ? 1 : -1));
+      });
+      view.addEventListener('pointercancel', () => { from = null; });
+      show(0);
+    });
+
     // the drifting row: drag it sideways and it glides on, slowing to a stop; it can't run past either end
     const drift = host.querySelector('.drift');
     if (drift) {
