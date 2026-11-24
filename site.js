@@ -28,7 +28,7 @@
     <footer class="site-foot">
       <p class="social">${SOCIAL.map(([name, url, d]) => `<a href="${url}" target="_blank" rel="noopener" aria-label="${name}"><svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg></a>`).join('')}</p>
       <p>Harshal Tholambia © 2026</p>
-      <p><a href="mailto:${EMAIL}">✉️ ${EMAIL}</a></p>
+      <p><a class="mail" href="mailto:${EMAIL}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6.5L20.5 7"/></svg>${EMAIL}</a></p>
     </footer>`);
 
   // dark mode for the whole site: data-theme on <html> (set before the first paint in each page's head). The switch in the top bar
