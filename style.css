@@ -382,9 +382,3 @@ figcaption{margin-top:10px;font-size:.85rem;font-weight:500}
   .scrawl,.hi,.sign .hand{clip-path:none}
 }
 
-/* the objects on the mat lift under the cursor; their note (main.js) sits just above where they were clicked */
-.photo,.desk-book{transition:scale .3s cubic-bezier(.2,.8,.2,1)}
-.photo.obj-on,.desk-book.obj-on{scale:1.035}
-.photo.obj-on{filter:drop-shadow(0 10px 10px rgba(0,0,0,.25))}
-  background:var(--paper);color:var(--deep);font:400 1.3rem/1 var(--hand);box-shadow:2px 4px 0 rgba(10,16,60,.28);pointer-events:none;animation:note-in .25s ease}
-@keyframes note-in{from{opacity:0;translate:-50% calc(-100% - 6px)}}
