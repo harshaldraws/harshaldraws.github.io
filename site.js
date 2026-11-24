@@ -1,7 +1,7 @@
 // The parts every page shares, laid out like the Google Site: the header with its links, the footer,
 // the Portfolio grid (portfolio.html) and a project page (project.html?p=<slug>). What goes in them is PROJECTS in content.js.
 {
-  const RESUME = 'https://drive.google.com/file/d/127pvr3vbfnfv0K0_zrgJcTa7zp9f9Z6I/view?usp=sharing';
+  const RESUME = 'https://drive.google.com/file/d/19noLYeYdHfVgPYiuQA0uA7cxckN0msNu/view?usp=sharing';
   const EMAIL = 'harshaldraws.work@gmail.com';
   const SOCIAL = [
     ['Behance', 'https://www.behance.net/harshaldraws', '<path d="M9.6 11.4c.9-.4 1.4-1.1 1.4-2.1C11 7.3 9.5 6.5 7.7 6.5H3v11h4.9c1.9 0 3.6-.9 3.6-3 0-1.3-.7-2.4-1.9-2.7Zm-4.4-3h2.1c.8 0 1.5.2 1.5 1.1 0 .8-.6 1.1-1.3 1.1H5.2V8.4Zm2.3 7.2H5.2v-2.9h2.4c1 0 1.6.4 1.6 1.5 0 1-.8 1.4-1.7 1.4ZM14.4 7.3h5.2v1.3h-5.2zM17 9.6c-2.3 0-3.9 1.7-3.9 4s1.5 4 3.9 4c1.8 0 3-.8 3.6-2.6h-1.9c-.2.6-1 .9-1.6.9-1.2 0-1.8-.6-1.8-1.8H21c.2-2.4-1.1-4.5-4-4.5Zm-1.7 3.2c.1-1 .7-1.6 1.7-1.6s1.5.6 1.6 1.6h-3.3Z"/>'],
