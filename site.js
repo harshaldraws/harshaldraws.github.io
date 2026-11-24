@@ -89,7 +89,7 @@
 
   // ---- the Illustration Wall: different styles scattered like a collage of prints on a table, around the title.
   // Drag it around (it keeps gliding when let go); a print lifts under the cursor, a click opens its project.
-  // One sheet of prints repeats in every direction. ----
+  // Scroll (or pinch on a phone) to zoom in and out. One sheet of prints repeats in every direction. ----
   const wall = document.getElementById('wall');
   if (wall) {
     const prints = WALL.flatMap((w) => w.pics.map((n) => ({ p: PROJECTS.find((x) => x.slug === w.slug), n })));
@@ -98,18 +98,32 @@
     const k = innerWidth < 700 ? 0.6 : 1;                // on a phone the whole table is smaller
     const AREA = 350 * 260 * k * k, GAP = 14 * k;         // every print covers about this much, wide or tall; the gap between prints
     const CAP = 52;                                        // room under a print for its name on hover: 8px down, two lines of 14px type
-    wall.innerHTML = prints.map(({ p, n }) => `<a class="print" href="${href(p.slug)}" draggable="false">
+    const touch = matchMedia('(pointer: coarse)').matches;
+    wall.innerHTML = '<div class="wall-layer">' + prints.map(({ p, n }) => `<a class="print" href="${href(p.slug)}" draggable="false">
         ${pic(p.slug, n, `${p.tile}, picture ${n}`)}<span class="cap">${html(p.tile)}</span></a>`).join('')
-      + '<div class="wall-title"><p class="t1">Various styles in one place.</p><p class="t2">Drag to explore</p></div>';
+      + `<div class="wall-title"><p class="t1">Various styles in one place.</p><p class="t2">Drag to explore, ${touch ? 'pinch' : 'scroll'} to zoom</p></div></div>`;
+    const layer = wall.querySelector('.wall-layer');
     wall.classList.add('laying');
     const items = [...wall.querySelectorAll('.print')], title = wall.querySelector('.wall-title');
     const mod = (a, n) => ((a % n) + n) % n;
-    let PW = 1, PH = 1, ox = 0, oy = 0, vx = 0, vy = 0, drag = null, moved = 0, last = 0;
+    // ox, oy: where the sheet sits, in the sheet's own pixels; Z: the zoom. The layer holding the prints is scaled by Z
+    // from the wall's top left corner, so a point of the sheet shows on screen at Z * (its spot + ox, oy)
+    let PW = 1, PH = 1, ox = 0, oy = 0, vx = 0, vy = 0, drag = null, moved = 0, last = 0, Z = 1, ZMIN = 1;
+    const ZMAX = 3, ZLOW = 0.85, EDGE = 500; // ZLOW: how far out it can zoom, just a little past how it opens, so the whole table never shows // EDGE: a print can hang this far off the sheet's edge before it wraps round
     const moving = [...items, title];
-    const place = () => moving.forEach((t) => {
-      const mx = Math.max(260, t.offsetWidth), my = Math.max(260, t.offsetHeight);
-      t.style.translate = `${mod(t._x + ox + mx, PW) - mx}px ${mod(t._y + oy + my, PH) - my}px`;
-    });
+    const place = () => {
+      layer.style.scale = Z;
+      moving.forEach((t) => {
+        const mx = Math.max(260, t.offsetWidth), my = Math.max(260, t.offsetHeight);
+        t.style.translate = `${mod(t._x + ox + mx, PW) - mx}px ${mod(t._y + oy + my, PH) - my}px`;
+      });
+    };
+    // zoom to z, keeping the point under (cx, cy) on the wall still. Zooming out stops while one sheet still fills the wall,
+    // since each print is on the sheet only once
+    const zoomAt = (z, cx, cy) => {
+      z = Math.min(ZMAX, Math.max(ZMIN, z));
+      ox += cx / z - cx / Z; oy += cy / z - cy / Z; Z = z; place();
+    };
 
     // lay the collage out once every print's shape is known
     const shapes = items.map((a) => new Promise((done) => { const im = a.querySelector('img'); if (im.complete && im.naturalWidth) done(); else { im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true }); } }));
@@ -153,25 +167,70 @@
       title._x = mid - title.offsetWidth / 2 - L; title._y = -title.offsetHeight / 2 - T;
       const cx = -L, cy = -T; // the title's centre on the sheet
       ox = wall.clientWidth / 2 - cx; oy = wall.clientHeight / 2 - cy; // open with the title in the middle of the screen
+      // so the wall can zoom out to ZLOW: where one sheet is too small for that (on a phone), repeat its prints in a grid
+      // of sheets, making one bigger sheet (each copy with its title, so no copy has an empty clearing)
+      const nx = Math.ceil((wall.clientWidth / ZLOW + EDGE) / PW), ny = Math.ceil((wall.clientHeight / ZLOW + EDGE) / PH);
+      for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+        if (!i && !j) continue;
+        [...items, title].forEach((a) => { const c = a.cloneNode(true); c._x = a._x + i * PW; c._y = a._y + j * PH; c.tabIndex = -1; c.setAttribute('aria-hidden', 'true'); layer.append(c); moving.push(c); });
+      }
+      PW *= nx; PH *= ny;
+      ZMIN = Math.min(1, Math.max(ZLOW, wall.clientWidth / (PW - EDGE), wall.clientHeight / (PH - EDGE)));
       place(); wall.classList.remove('laying');
     });
-    wall.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY }; moved = 0; vx = vy = 0; last = performance.now(); });
+    // the fingers (or mouse) on the wall: one drags it, two pinch to zoom around the point between them
+    const fingers = new Map();
+    let pinch = null;
+    const spot = (e) => { const b = wall.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+    const pair = () => { const [a, b] = [...fingers.values()]; return { d: Math.hypot(a[0] - b[0], a[1] - b[1]), x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2 }; };
+    wall.addEventListener('pointerdown', (e) => {
+      fingers.set(e.pointerId, spot(e));
+      if (fingers.size === 2) { pinch = pair(); drag = null; moved = 99; vx = vy = 0; wall.classList.add('dragging'); return; } // a pinch is never a click
+      drag = { x: e.clientX, y: e.clientY }; moved = 0; vx = vy = 0; last = performance.now();
+    });
     wall.addEventListener('pointermove', (e) => {
+      if (fingers.has(e.pointerId)) fingers.set(e.pointerId, spot(e));
+      if (pinch && fingers.size === 2) {
+        const now = pair();
+        ox += (now.x - pinch.x) / Z; oy += (now.y - pinch.y) / Z; // the fingers moving together slide the wall
+        zoomAt(Z * (now.d / pinch.d), now.x, now.y); pinch = now; return;
+      }
       if (!drag) return;
-      if (!e.buttons) { release(); return; } // the press ended somewhere else
+      if (!e.buttons) { release(e); return; } // the press ended somewhere else
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y, now = performance.now(), dt = Math.max(1, now - last);
-      moved += Math.abs(dx) + Math.abs(dy); ox += dx; oy += dy;
-      vx = (dx / dt) * 16; vy = (dy / dt) * 16; // speed per frame, for the glide after letting go
+      moved += Math.abs(dx) + Math.abs(dy); ox += dx / Z; oy += dy / Z;
+      vx = (dx / Z / dt) * 16; vy = (dy / Z / dt) * 16; // speed per frame, for the glide after letting go
       drag = { x: e.clientX, y: e.clientY }; last = now;
       if (moved > 6 && !wall.classList.contains('dragging')) { wall.classList.add('dragging'); wall.setPointerCapture(e.pointerId); } // a real drag: keep it even off the wall
       place();
     });
-    function release() { if (!drag) return; drag = null; setTimeout(() => wall.classList.remove('dragging')); if (moved > 6) glide(); }
+    function release(e) {
+      fingers.delete(e.pointerId);
+      if (pinch) { if (fingers.size < 2) { pinch = null; setTimeout(() => wall.classList.remove('dragging')); } return; } // lifting one finger of a pinch doesn't start a drag
+      if (!drag) return; drag = null; setTimeout(() => wall.classList.remove('dragging')); if (moved > 6) glide();
+    }
     wall.addEventListener('pointerup', release); wall.addEventListener('pointercancel', release);
+    // the scroll wheel zooms: up in, down out, around the cursor. Fully zoomed out, scrolling on down moves the page as usual
+    let zTarget = 1, zAt = [0, 0], zooming = false;
+    wall.addEventListener('wheel', (e) => {
+      const out = e.deltaY > 0;
+      if ((out && Z <= ZMIN + 1e-3) || (!out && Z >= ZMAX - 1e-3)) return; // at the end of the zoom: let the page scroll
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? wall.clientHeight : 1; // lines or pages, in pixels
+      zTarget = Math.min(ZMAX, Math.max(ZMIN, (zooming ? zTarget : Z) * Math.exp(-e.deltaY * unit * 0.0018)));
+      zAt = spot(e);
+      if (!zooming) { zooming = true; requestAnimationFrame(function ease() { // ease towards it, so a notched mouse wheel glides too
+        const z = Z + (zTarget - Z) * 0.25;
+        zoomAt(Math.abs(zTarget - z) < 0.002 ? zTarget : z, zAt[0], zAt[1]);
+        if (Z !== zTarget) requestAnimationFrame(ease); else zooming = false;
+      }); }
+    }, { passive: false });
     wall.addEventListener('click', (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true); // a drag is not a click
     wall.addEventListener('keydown', (e) => {
       const k = { ArrowLeft: [120, 0], ArrowRight: [-120, 0], ArrowUp: [0, 120], ArrowDown: [0, -120] }[e.key];
-      if (k && e.target === wall) { e.preventDefault(); vx = k[0] / 8; vy = k[1] / 8; glide(); }
+      if (k && e.target === wall) { e.preventDefault(); vx = k[0] / 8 / Z; vy = k[1] / 8 / Z; glide(); }
+      const z = { '+': 1.25, '=': 1.25, '-': 0.8 }[e.key]; // + and - zoom from the middle
+      if (z && e.target === wall) { e.preventDefault(); zoomAt(Z * z, wall.clientWidth / 2, wall.clientHeight / 2); }
     });
     // let go: it keeps moving and slows down, like a sheet slid across a table
     let gliding = false;
