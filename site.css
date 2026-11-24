@@ -207,7 +207,7 @@ body.gs[data-page=project]{background:#fff}
 }
 
 /* a handwritten caption under the cutting mat on the Welcome page */
-.mat-caption{margin:14px 0 0;text-align:right;padding-right:clamp(8px,2vw,24px);font:400 clamp(1.6rem,1.1rem + 1.4vw,2.4rem)/1 "Reenie Beanie",cursive;color:#4084a6;rotate:-2deg}
+.mat-caption{margin:14px 0 0;text-align:right;padding-right:clamp(8px,2vw,24px);font:400 clamp(1.6rem,1.1rem + 1.4vw,2.4rem)/1 "Reenie Beanie",cursive;color:#D99A1E;text-shadow:0 0 8px rgba(242,178,51,.35);rotate:-2deg}
 
 /* the dark mode switch in the top bar: a track with a sliding knob, the moon side when off and the sun side when on (site.js) */
 .theme-switch{flex:none;display:grid;place-items:center;margin:-4px -4px -4px 0;padding:4px;border:0;border-radius:99px;background:none;cursor:pointer}
@@ -222,6 +222,7 @@ body.gs[data-page=project]{background:#fff}
 
 /* ---- dark mode, everywhere (html[data-theme=dark], from the switch on the mat or in the header) ---- */
 html[data-theme=dark]{color-scheme:dark}
+html[data-theme=dark] .mat-caption{color:#F6C453;text-shadow:0 0 10px rgba(246,196,83,.45)}
 html[data-theme=dark] body.gs{background:#121212;color:#ececec}
 html[data-theme=dark] body.gs[data-page=welcome]{background:#000}
 html[data-theme=dark] body.gs[data-page=project]{background:#121212}
