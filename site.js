@@ -40,11 +40,23 @@
       const box = document.createElement('div'); box.className = 'embed-stack'; f.before(box);
       return ['light', 'dark'].map((t) => {
         const c = t === 'light' ? f : f.cloneNode(false);
-        c.dataset.theme = t; c.src = `${f.dataset.src}?theme=${t}`;
+        c.dataset.theme = t;
         c.addEventListener('load', () => c.contentWindow.postMessage(c.classList.contains('on') ? 'play' : 'pause', '*'));
         box.append(c); return c;
       });
     });
+    // starting a frame blocks the whole page (the Skills frame builds its paper textures), and it froze the name landing on
+    // the mat. So the frames start only after the name has landed, and only as the visitor scrolls near them: first the
+    // copy on show, then the other one once that's done
+    const load = (c) => { c.src = `${c.dataset.src}?theme=${c.dataset.theme}`; };
+    const near = new IntersectionObserver((seen) => seen.filter((e) => e.isIntersecting).forEach((e) => {
+      near.unobserve(e.target);
+      const shown = e.target.querySelector('.on'), hidden = e.target.querySelector(':not(.on)');
+      shown.addEventListener('load', () => load(hidden), { once: true });
+      load(shown);
+    }), { rootMargin: '400px 0px' });
+    addEventListener('load', () => Promise.all(document.getAnimations().filter((a) => ['land', 'stick'].includes(a.animationName)).map((a) => a.finished))
+      .then(() => stacks.forEach(([c]) => near.observe(c.parentElement))));
     const frames = () => stacks.flat().forEach((c) => {
       const on = c.dataset.theme === root.dataset.theme;
       c.classList.toggle('on', on); c.tabIndex = on ? 0 : -1;
