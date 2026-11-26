@@ -182,11 +182,11 @@ h1 .draws:not(.landed){animation:stick .6s cubic-bezier(.2,.8,.25,1) 1s backward
 .photo .day{filter:drop-shadow(5px 9px 6px rgba(0,0,0,.35))}
 .photo .night{opacity:0}
 .lamp .photo{z-index:10}
-/* the lamp's warm pool on the photos themselves (they sit above the .light layer): the same gradient as the pool on the
-   mat, sized to the hero and shifted so it lines up with the desk under each object (--hw, --hh, --px, --py: main.js),
+/* the lamp's light on the photos themselves (they sit above the .light layer): the same gradient as the light on the
+   mat, warm pool and dark room beyond it, sized to the hero and shifted so it lines up with the desk under each object (--hw, --hh, --px, --py: main.js),
    and cut to the object's shape (--shape) */
 .photo::after{content:"";position:absolute;inset:0;pointer-events:none;display:none;
-  background:radial-gradient(ellipse var(--lw) var(--lh) at var(--lx) var(--ly),rgba(255,208,84,.38),rgba(255,192,70,.25) 40%,rgba(240,164,52,.12) 58%,transparent 70%) var(--px,0) var(--py,0)/var(--hw,100%) var(--hh,100%) no-repeat;
+  background:radial-gradient(ellipse var(--lw) var(--lh) at var(--lx) var(--ly),rgba(255,208,84,.38),rgba(255,192,70,.25) 40%,rgba(240,164,52,.12) 58%,rgba(16,10,4,.56) 70%,rgba(10,7,3,.76) 78%,rgba(6,4,2,.82)) var(--px,0) var(--py,0)/var(--hw,100%) var(--hh,100%) no-repeat;
   -webkit-mask:var(--shape) 0 0/100% 100% no-repeat;mask:var(--shape) 0 0/100% 100% no-repeat}
 .lamp .photo::after{display:block}
 .lamp.flick .photo::after{display:none}
